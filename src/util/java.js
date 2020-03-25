@@ -154,7 +154,7 @@ class Interface extends Class {
   }
 }
 
-module.exports = {
+export {
   Package,
   Method,
   MethodParameter,
