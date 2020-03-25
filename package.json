@@ -11,6 +11,7 @@
         "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
         "lint": "tslint -p tsconfig.json"
     },
+    "types": "typings/index.d.ts",
     "files": ["dist/**/*"],
     "keywords": [],
     "author": "throw-out-error",
