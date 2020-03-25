@@ -8,7 +8,7 @@
     "allowJs": false,                       /* Allow javascript files to be compiled. */
     "checkJs": false,                       /* Report errors in .js files. */
     "typeRoots": ["./node_modules/@types", "./node_modules/'fastpriorityqueue", "src/typings"],
-
+    "types": ["src/typings/**/*"],
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
@@ -65,6 +65,6 @@
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
-  "include": ["src", "typings"],
+  "include": ["src", "typings", "test.js"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

@@ -1,1 +1,1 @@
-const {Mod,Package,Class}=require("./mod");
+const {Mod,Package,Class}=require("./src/mod");
