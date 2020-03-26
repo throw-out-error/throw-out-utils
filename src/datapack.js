@@ -44,7 +44,7 @@ const jsonBeautify = object => {
   return json.join('')
 }
 
-class Datapack {
+export class Datapack {
   /**
    * Creates a datapack
    * @param {string} name The name of the datapack
@@ -135,7 +135,7 @@ class Datapack {
   }
 }
 
-class Namespace {
+export class Namespace {
   /**
    * Creates a namespace
    * @param {string} name The name of the namespace
@@ -270,7 +270,7 @@ class Namespace {
   }
 }
 
-class Tag {
+export class Tag {
   /**
    * Creates a tag
    * @param {string} path The path of the tag file relative to namspace/tags/type (excluding the file extension)
@@ -328,7 +328,7 @@ class Tag {
   }
 }
 
-class Recipe {
+export class Recipe {
   /**
    * Creates a Recipe
    * @param {string} path  The path of the recipe file relative to namespace/recipes (excluding the file extension)
@@ -366,7 +366,7 @@ class Recipe {
   }
 }
 
-class SmeltingRecipe extends Recipe {
+export class SmeltingRecipe extends Recipe {
   /**
    * Creates a SmeltingRecipe
    * @param {string} path  The path of the recipe file relative to namespace/recipes (excluding the file extension)
@@ -390,7 +390,7 @@ class SmeltingRecipe extends Recipe {
   }
 }
 
-class StonecutterRecipe extends Recipe {
+export class StonecutterRecipe extends Recipe {
   /**
    * Creates a StonecuttingRecipe
    * @param {string} path  The path of the recipe file relative to namespace/recipes (excluding the file extension)
@@ -411,7 +411,7 @@ class StonecutterRecipe extends Recipe {
   }
 }
 
-class ShapelessCraftingRecipe extends Recipe {
+export class ShapelessCraftingRecipe extends Recipe {
   /**
    * Creates a ShaplessCraftingRecipe
    * @param {string} path  The path of the recipe file relative to namespace/recipes (excluding the file extension)
@@ -436,7 +436,7 @@ class ShapelessCraftingRecipe extends Recipe {
   }
 }
 
-class ShapedCraftingRecipe extends Recipe {
+export class ShapedCraftingRecipe extends Recipe {
   /**
    * Creates a ShapedCraftingRecipe
    * @param {string} path  The path of the recipe file relative to namespace/recipes (excluding the file extension)
@@ -460,7 +460,7 @@ class ShapedCraftingRecipe extends Recipe {
   }
 }
 
-class LootTable {
+export class LootTable {
   /**
    * Creates a LootTable
    * @param {string} path The path of the loot table file relative to namespace/loot_tables (excluding the file extension)
@@ -527,7 +527,7 @@ class LootTable {
   }
 }
 
-class LootPool {
+export class LootPool {
   /**
    * Creates a LootPool
    * @param {object} options The configuration for the pool
@@ -577,7 +577,7 @@ class LootPool {
   }
 }
 
-class LootEntry {
+export class LootEntry {
   /**
    * Creates a LootEntry
    * @param {('minecraft:item'|'minecraft:loot_table'|'minecraft:empty')} type the type of loot entry
@@ -603,7 +603,7 @@ class LootEntry {
   }
 }
 
-class ItemEntry extends LootEntry {
+export class ItemEntry extends LootEntry {
   /**
    * Creates an ItemEntry
    * @param {object} options the configuration for the item entry
@@ -645,7 +645,7 @@ class ItemEntry extends LootEntry {
   }
 }
 
-class EmptyEntry extends LootEntry {
+export class EmptyEntry extends LootEntry {
   /**
    * Creates an EmptyEntry
    * @param {object} options the configuration for the empty entry
@@ -661,7 +661,7 @@ class EmptyEntry extends LootEntry {
   }
 }
 
-class LootTableEntry extends LootEntry {
+export class LootTableEntry extends LootEntry {
   /**
    * Creates a LootTableEntry
    * @param {object} options the configuration of the loot table entry
@@ -678,7 +678,7 @@ class LootTableEntry extends LootEntry {
   }
 }
 
-class LootFunction {
+export class LootFunction {
   /**
    * Creates a LootFunction
    * @param {object} options the configuration of the loot function

@@ -28,7 +28,7 @@ const aStar = params => {
   openHeap.add(startNode)
   openDataMap.set(hash(startNode.data), startNode)
   var startTime = new Date()
-  while (openHeap.size != 0) {
+  while (openHeap.size) {
     if (new Date() - startTime > params.timeout) {
       return {
         status: 'timeout',

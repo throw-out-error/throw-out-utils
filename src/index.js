@@ -1,6 +1,15 @@
-const astar = require("./util/astar");
-const java = require("./util/java");
-const string = require("./util/string");
+const datapack = require('./datapack'),
+  mod = require('./mod'),
+  aStar = require('./util/astar'),
+  java = require('./util/java'),
+  misc = require('./util/misc'),
+  math = require('./util/math')
 
-
-module.exports = { astar, java, string };
+module.exports = {
+  datapack,
+  mod,
+  aStar,
+  java,
+  misc,
+  math: math,
+}

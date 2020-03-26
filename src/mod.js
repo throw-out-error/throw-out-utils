@@ -1,7 +1,7 @@
-const { Package, RootPackage, Class } = require('./java-transpiler/java')
-const utils = require("./util");
+const { Package, RootPackage, Class } = require('./util/java')
+const misc = require("./util/misc");
 
-class Mod {
+export class Mod {
   /**
    * @param name the name of the mod
    * @param packageName the name of the java root package the mod will be created in

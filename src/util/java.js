@@ -154,7 +154,7 @@ class Interface extends Class {
   }
 }
 
-export {
+export default {
   Package,
   Method,
   MethodParameter,

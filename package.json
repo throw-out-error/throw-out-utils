@@ -1,21 +1,23 @@
 {
     "name": "@throw-out-error/throw-out-utils",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "main": "dist/index.js",
     "scripts": {
         "prepublishOnly": "npm test && npm run lint",
         "prepare": "npm run build",
-        "preversion": "npm run lint",
         "version": "npm run format && git add -A src",
-        "build": "tsc",
+        "build": "tsc --build",
+        "preversion": "npm run lint",
         "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-        "lint": "tslint -p tsconfig.json"
+        "lint": "eslint src"
     },
     "types": "dist/index.d.ts",
     "typescript": {
-		"definition": "dist/index.d.ts"
-	},
-    "files": ["dist/**/*"],
+        "definition": "dist/index.d.ts"
+    },
+    "files": [
+        "dist/**/*"
+    ],
     "keywords": [],
     "author": "throw-out-error",
     "license": "GPL-3.0-or-later",
@@ -26,17 +28,16 @@
         "type": "git",
         "url": "https://github.com/throw-out-error/throw-out-utils"
     },
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org/"
-    },
     "description": "",
     "dependencies": {
         "@types/vec3": "0.0.29",
-        "electron": "^8.1.1",
         "fastpriorityqueue": "^0.6.3",
         "vec3": "^0.1.3"
     },
     "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-prettier": "^3.1.2",
         "prettier": "^2.0.2",
         "tslint": "^6.1.0",
         "tslint-config-prettier": "^1.18.0",
