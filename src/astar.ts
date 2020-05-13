@@ -1,10 +1,10 @@
-var assert = require('assert'),
-  FastPriorityQueue = require("fastpriorityqueue")
+import assert from 'assert';
+import FastPriorityQueue from 'fastpriorityqueue';
 
 /**
   Credit goes to https://github.com/andrewrk/node-astar
  */
-const aStar = params => {
+export const aStar = params => {
   assert.ok(params.start !== undefined)
   assert.ok(params.isEnd !== undefined)
   assert.ok(params.neighbor)
@@ -17,6 +17,7 @@ const aStar = params => {
   var startNode = {
     data: params.start,
     g: 0,
+    f: 0,
     h: params.heuristic(params.start),
   }
   var bestNode = startNode
@@ -29,7 +30,7 @@ const aStar = params => {
   openDataMap.set(hash(startNode.data), startNode)
   var startTime = new Date()
   while (openHeap.size) {
-    if (new Date() - startTime > params.timeout) {
+    if (new Date().getTime() - startTime.getTime() > params.timeout) {
       return {
         status: 'timeout',
         cost: bestNode.g,
@@ -112,5 +113,3 @@ function defaultHash(node) {
 function heapComparator(a, b) {
   return a.f < b.f ? true : false;
 }
-
-module.exports = aStar

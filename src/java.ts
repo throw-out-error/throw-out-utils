@@ -1,4 +1,7 @@
-class Package {
+export class Package {
+  classes: Map<String, Class>;
+  name: string;
+  children: Package[];
   /**
    * @param {string} name the name of the package
    */
@@ -6,9 +9,9 @@ class Package {
     /** @type {string} the name of the package */
     this.name = name
     /** @type {Package[]} the child packages of the package */
-    this.packages = []
+    this.children = []
     /** @type {object} the dictionary of classes */
-    this.classes = {}
+    this.classes = new Map();
   }
 
   /**
@@ -29,12 +32,12 @@ class Package {
     return this.classes[className]
   }
 
-  /**@param {Class} Class class to add to the package */
+  /**@param {Class} Class export class to add to the package */
   addClass(Class) {
     this.classes[Class.name] = Class
   }
 
-  /**@param {Class} Class class to remove a class from the package */
+  /**@param {Class} Class export class to remove a export class from the package */
   removeClass(Class) {
     delete this.classes[Class.name]
   }
@@ -46,39 +49,25 @@ class Package {
    */
   createPackage(name) {
     let _package = new Package(`${this.name}.${name}`)
-    this.packages.push(_package)
+    this.children.push(_package)
     return _package
   }
 }
 
-class RootPackage extends Package {
-  /**
-   * @param domain the domain of the package - example: com
-   * @param author the author of the package
-   * @param name the name of the package
-   */
-  constructor(domain, author, name) {
-    /** @type {Package} the package of the domain */
-    this.domain = new Package(domain)
-    /** @type {Package} the package of the author */
-    this.author = this.domain.createPackage(author)
-    /** @type {Package} the name of the package */
-    this.packageName = this.author.createPackage(name)
-  }
-
-  compile() {
-    return `${this.domain.name}/${this.author.name}/${this.name}`
-  }
-}
-
-class MethodParameter {
+export class MethodParameter {
+  type: Class;
+  name: string;
   constructor(Class, name) {
     this.type = Class
     this.name = name
   }
 }
 
-class Method {
+export class Method {
+  access: string;
+  returnType: Class;
+  name: string;
+  parameters: MethodParameter[];
   /**
    * @param {'public'|'private'|'default'|'protected'} access can be public private, default, or protected
    * @param {string} returnType the type of var that is returned
@@ -106,16 +95,21 @@ class Method {
       }
     */
     var s = `${this.access} ${this.returnType} ${this.name} (${
-      this.parameters.map(p => `${p.class} ${p.name},`).join()
+      this.parameters.map(p => `${p.type} ${p.name},`).join()
       /**Get rid of the last comma*/ .slice(0, -1)
     }){}`
     return s
   }
 }
 
-class Class {
+export class Class {
+  name: string;
+  access: string;
+  imports: string[];
+  methods: Method[];
+  
   constructor(name, access, imports) {
-    /**@type {string} name of the class */
+    /**@type {string} name of the export class */
     this.name = name
 
     this.access = access || 'public'
@@ -127,7 +121,7 @@ class Class {
 
   compile() {
     var str = `${
-      imports.map(i=>`import ${i} *;\n`)
+      this.imports.map(i=>`import ${i} *;\n`)
     }\n${this.access} ${this.constructor.name.toLowerCase()} ${this.name} {\n${
       this.methods.map(m => `${m.compile()}\n`).join()
     }}`
@@ -141,25 +135,16 @@ class Class {
   }
 }
 
-class Enum extends Class {
+export class Enum extends Class {
+  fields: Enum[];
   constructor(name,access,imports,fields) {
     super(name,access,imports);
     this.fields=fields;
   }
 }
 
-class Interface extends Class {
+export class Interface extends Class {
   constructor(name,access,imports) {
     super(name,access,imports);
   }
-}
-
-export default {
-  Package,
-  Method,
-  MethodParameter,
-  RootPackage,
-  Class,
-  Enum,
-  Interface,
 }

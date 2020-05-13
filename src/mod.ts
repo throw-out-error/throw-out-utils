@@ -1,7 +1,13 @@
-const { Package, RootPackage, Class } = require('./util/java')
-const misc = require("./util/misc");
+import { Package, Class } from './java';
+import * as misc from "./misc";
 
 export class Mod {
+  rootPackage: Package;
+  name: string;
+  id: string;
+  path: string;
+  version: string;
+
   /**
    * @param name the name of the mod
    * @param packageName the name of the java root package the mod will be created in
@@ -14,7 +20,7 @@ export class Mod {
     this.path = path
     const p = packageName.split('.')
     /**@type {Package} the root package of the mod*/
-    this.package = new RootPackage(p[0], p[1], p[2])
+    this.rootPackage = new Package(p[0])
     /**@type {string} the id of the mod */
     this.id = "untitled_mod";
     /**@type {string} the version of the mod */
@@ -33,17 +39,13 @@ export class Mod {
   }
 
   createMainModClass() {
-    const mainModClass = new Class(utils.capitalize(this.modId.replace("_", " ")))
+    const mainModClass = new Class(this.id.replace("_", ""), "public", []);
     console.log(`Creating main mod class ${mainModClass.name}`);
-    this.package.addClass(mainModClass);
+    this.rootPackage.addClass(mainModClass);
 
   }
 
   compile() {
 
   }
-}
-
-module.exports = {
-    Mod,
 }
