@@ -175,7 +175,7 @@ export class Vector {
     lerp(a: any, b: any, fraction: any) {
       return b
         .subtract(a)
-        .multiply(fraction)
+        .scale(fraction)
         .add(a);
     }
     fromArray(a: number[]) {
