@@ -1,76 +1,107 @@
+import { Direction } from './direction'
+import { dir } from 'console'
+
 export class Vector {
-    x: number;
-    y: number;
-    z: number;
-    constructor(x = 0, y = 0, z = 0) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+	x: number
+	y: number
+	z: number
+	constructor(x = 0, y = 0, z = 0) {
+		this.x = x
+		this.y = y
+		this.z = z
+	}
 
-    negative() {
-        return new Vector(-this.x, -this.y, -this.z);
-    }
+	negate(): Vector {
+		this.set(-this.x, -this.y, -this.z)
+		return this
+	}
 
-    add(v: any) {
-        if (v instanceof Vector)
-            return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
-        else return new Vector(this.x + v, this.y + v, this.z + v);
-    }
+	add(v: Vector | number): Vector {
+		if (v instanceof Vector) return this.set(this.x + v.x, this.y + v.y, this.z + v.z)
+		else return this.set(this.x + v, this.y + v, this.z + v)
+	}
 
-    subtract(v: any) {
-        if (v instanceof Vector)
-            return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
-        else return new Vector(this.x - v, this.y - v, this.z - v);
-    }
+	/**
+     * Offsets this vector in the specified direction (n times).
+     * If n is not specified then it will default to one unit in the direction specified.
+     * Keep in mind that this method does not clone the current vector.
+     * @param direction the direction to offset in
+     */
+	offset(direction: Direction, n?: number): Vector {
+		let dirVec = new Vector()
+		switch (direction) {
+			case Direction.UP:
+				dirVec = new Vector(0, 1, 0)
+				break
+			case Direction.DOWN:
+				dirVec = new Vector(0, -1, 0)
+				break
+			case Direction.NORTH:
+				dirVec = new Vector(0, 0, -1)
+				break
+			case Direction.SOUTH:
+				dirVec = new Vector(0, 0, 1)
+				break
+			case Direction.WEST:
+				dirVec = new Vector(-1, 0, 0)
+				break
+			case Direction.EAST:
+				dirVec = new Vector(1, 0, 0)
+				break
+        }
+        
+        if(n) dirVec.scale(n);
 
-    scale(v: any) {
-        if (v instanceof Vector)
-            return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
-        else return new Vector(this.x * v, this.y * v, this.z * v);
-    }
+		return this.add(dirVec)
+	}
 
-    divide(v: any) {
-        if (v instanceof Vector)
-            return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
-        else return new Vector(this.x / v, this.y / v, this.z / v);
-    }
+	subtract(v: Vector | number): Vector {
+		if (v instanceof Vector) return this.set(this.x - v.x, this.y - v.y, this.z - v.z)
+		else return this.set(this.x - v, this.y - v, this.z - v)
+	}
 
-    equals(v: Vector) {
-        return this.x === v.x && this.y === v.y && this.z === v.z;
-    }
+	scale(v: Vector | number): Vector {
+		if (v instanceof Vector) return this.set(this.x * v.x, this.y * v.y, this.z * v.z)
+		else return this.set(this.x * v, this.y * v, this.z * v)
+	}
 
-    dot(v: Vector) {
-        return this.x * v.x + this.y * v.y + this.z * v.z;
-    }
+	divide(v: Vector | number): Vector {
+		if (v instanceof Vector) return this.set(this.x / v.x, this.y / v.y, this.z / v.z)
+		else return this.set(this.x / v, this.y / v, this.z / v)
+	}
 
-    cross(v: Vector) {
-        return new Vector(
-            this.y * v.z - this.z * v.y,
-            this.z * v.x - this.x * v.z,
-            this.x * v.y - this.y * v.x
-        );
-    }
+	equals(v: Vector): boolean {
+		return this.x === v.x && this.y === v.y && this.z === v.z
+	}
 
-    dotProduct(vector: Vector) {
-        return this.x * vector.x + this.y * vector.y;
-    }
+	dot(v: Vector): number {
+		return this.x * v.x + this.y * v.y + this.z * v.z
+	}
 
-    sqrMagnitude() {
-        return this.dotProduct(this);
-    }
+	cross(v: Vector): Vector {
+		return new Vector(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x)
+	}
 
-    magnitude() {
-        return Math.sqrt(this.sqrMagnitude());
-    }
+	dotProduct(vector: Vector): number {
+		return this.x * vector.x + this.y * vector.y
+	}
 
-    set(x: number, y?: number, z?: number) {
-        this.x = x;
-        this.y = y || this.y;
-        this.z = z || this.z;
-    }
+	sqrMagnitude(): number {
+		return this.dotProduct(this)
+	}
 
-    /**
+	magnitude(): number {
+		return Math.sqrt(this.sqrMagnitude())
+	}
+
+	set(x: number, y?: number, z?: number): Vector {
+		this.x = x
+		this.y = y || this.y
+		this.z = z || this.z
+		return this
+	}
+
+	/**
   
     * Normalizes the vector by its magnitude
   
@@ -87,27 +118,27 @@ export class Vector {
       normalize();
   
     */
-    normalize(): Vector {
-        const magnitude = this.magnitude();
+	normalize(): Vector {
+		const magnitude = this.magnitude()
 
-        if (magnitude === 0) {
-            // divide by zero
+		if (magnitude === 0) {
+			// divide by zero
 
-            this.x = 0;
+			this.x = 0
 
-            this.y = 0;
+			this.y = 0
 
-            return this;
-        }
+			return this
+		}
 
-        this.x /= magnitude;
+		this.x /= magnitude
 
-        this.y /= magnitude;
+		this.y /= magnitude
 
-        return this;
-    }
+		return this
+	}
 
-    /**
+	/**
   
     * Returns the distance from another vector
   
@@ -125,63 +156,66 @@ export class Vector {
   
       distance(${1:otherVector});
     */
-    distance(vector: Vector) {
-        return vector.subtract(this).magnitude();
+	distance(vector: Vector): number {
+		return vector.clone().subtract(this).magnitude()
+	}
+
+	length(): number {
+		return Math.sqrt(this.dot(this))
+	}
+
+	unit(): Vector {
+		return this.divide(this.length())
+	}
+
+	min(): number {
+		return Math.min(Math.min(this.x, this.y), this.z)
+	}
+
+	max(): number {
+		return Math.max(Math.max(this.x, this.y), this.z)
+	}
+
+	toAngles(): any {
+		return {
+			theta: Math.atan2(this.z, this.x),
+			phi: Math.asin(this.y / this.length()),
+		}
+	}
+
+	angleTo(a: Vector): number {
+		return Math.acos(this.dot(a) / (this.length() * a.length()))
+	}
+
+	toArray(n?: number): number[] {
+		return [ this.x, this.y, this.z ].slice(0, n || 3)
+	}
+
+	/**
+        Copies the current vector and returns the new copy.
+        This is used if you don't want to modify the original vector when using operations.
+    */
+	clone(): Vector {
+		return new Vector(this.x, this.y, this.z)
+	}
+
+	static fromAngles(theta: number, phi: number): Vector {
+		return new Vector(Math.cos(theta) * Math.cos(phi), Math.sin(phi), Math.sin(theta) * Math.cos(phi))
+	}
+
+	randomDirection(): Vector {
+		return Vector.fromAngles(Math.random() * Math.PI * 2, Math.asin(Math.random() * 2 - 1))
+	}
+
+	lerp(a: Vector, b: Vector, fraction: number): Vector {
+		return b.clone().subtract(a).scale(fraction).add(a)
+	}
+
+    toString(): string {
+        return `${this.x},${this.y},${this.z}`;
     }
 
-    length() {
-        return Math.sqrt(this.dot(this));
-    }
-
-    unit() {
-        return this.divide(this.length());
-    }
-
-    min() {
-        return Math.min(Math.min(this.x, this.y), this.z);
-    }
-
-    max() {
-        return Math.max(Math.max(this.x, this.y), this.z);
-    }
-
-    toAngles() {
-        return {
-            theta: Math.atan2(this.z, this.x),
-            phi: Math.asin(this.y / this.length()),
-        };
-    }
-
-    angleTo(a: Vector) {
-        return Math.acos(this.dot(a) / (this.length() * a.length()));
-    }
-
-    toArray(n?: number) {
-        return [this.x, this.y, this.z].slice(0, n || 3);
-    }
-
-    clone() {
-        return new Vector(this.x, this.y, this.z);
-    }
-
-    fromAngles(theta: number, phi: number) {
-        return new Vector(
-            Math.cos(theta) * Math.cos(phi),
-            Math.sin(phi),
-            Math.sin(theta) * Math.cos(phi)
-        );
-    }
-    randomDirection() {
-        return this.fromAngles(
-            Math.random() * Math.PI * 2,
-            Math.asin(Math.random() * 2 - 1)
-        );
-    }
-
-    lerp(a: any, b: any, fraction: any) {
-        return b.subtract(a).scale(fraction).add(a);
-    }
-    fromArray(a: number[]) {
-        return new Vector(a[0], a[1], a[2]);
-    }
+	static fromArray(a: number[]): Vector {
+		return new Vector(a[0], a[1], a[2])
+	}
 }
