@@ -8,4 +8,4 @@ Throw Out Utils also comes with a bundle.js file that can be used in the browser
 
 ## Vectors
 
-A vector is a class that stores 3d coordinates and can be operated using multiplication, addition, etc. If the coordinates are not specified, it automatically uses the coordinates 0, 0, 0. See examples/vec.ts for an example.
+A vector is a class that stores 3d coordinates and can be operated using multiplication, addition, etc. If the coordinates are not specified, it automatically uses the coordinates 0, 0, 0. See `examples/vec.ts` for an example.
