@@ -104,6 +104,32 @@ export class Vector {
         return this;
     }
 
+    getByIndex(index: number): number {
+        switch (index) {
+            default:
+                return this.x;
+            case 1:
+                return this.y;
+            case 2:
+                return this.z;
+        }
+    }
+
+    setByIndex(index: number, value: number): Vector {
+        switch (index) {
+            default:
+                this.x = value;
+                break;
+            case 1:
+                this.y = value;
+                break;
+            case 2:
+                this.z = value;
+                break;
+        }
+        return this;
+    }
+
     /**
     * Normalizes the vector by its magnitude
     * @function
