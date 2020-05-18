@@ -9,17 +9,17 @@ export class Cuboid {
 
     public constructor(
         x1: number,
-        x2: number,
         y1: number,
-        y2: number,
         z1: number,
+        x2: number,
+        y2: number,
         z2: number
     ) {
         this.minimumPoint = new Vector(x1, y1, z1);
         this.maximumPoint = new Vector(x2, y2, z2);
     }
 
-    public static fromVector(v: Vector) {
+    public static fromVector(v: Vector): Cuboid {
         return this.fromVectors(v, v);
     }
 
@@ -28,7 +28,7 @@ export class Cuboid {
      * @param p1 The minimum point
      * @param p2 The maximum point
      */
-    public static fromVectors(p1: Vector, p2: Vector) {
+    public static fromVectors(p1: Vector, p2: Vector): Cuboid {
         return new Cuboid(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
     }
 
@@ -56,16 +56,38 @@ export class Cuboid {
     }
 
     public maxX(): number {
-        return this.minimumPoint.x;
+        return this.maximumPoint.x;
     }
 
     public maxY(): number {
-        return this.minimumPoint.y;
+        return this.maximumPoint.y;
     }
 
     public maxZ(): number {
-        return this.minimumPoint.z;
+        return this.maximumPoint.z;
     }
+
+    public clone(): Cuboid {
+        return Cuboid.fromVectors(this.minimumPoint, this.maximumPoint);
+    }
+
+    /**
+     * Returns an array of all possible points in a cuboid.
+     */
+    public all(): Vector[] {
+        const arr: Vector[] = [];
+
+        for (let i = this.minX(); i < this.maxX(); i++) {
+            for (let j = this.minY(); j < this.maxY(); j++) {
+                for (let k = this.minZ(); k < this.maxZ(); k++) {
+                    arr.push(new Vector(i, j, k));
+                }
+            }
+        }
+
+        return arr;
+    }
+
     /**
      * Creates a new Cuboid that has been contracted by the given amount, with positive changes
      * decreasing max values and negative changes increasing min values.
@@ -222,7 +244,7 @@ export class Cuboid {
     /**
      * Returns if the supplied vector is compconstely inside the bounding box
      */
-    public containsVector(v: Vector) {
+    public containsVector(v: Vector): boolean {
         return this.contains(v.x, v.y, v.z);
     }
 
@@ -275,6 +297,29 @@ export class Cuboid {
 
     public getZSize(): number {
         return this.maxZ() - this.minZ();
+    }
+
+    static fromString(s: string): Cuboid {
+        try {
+            const minMax = s.split(":");
+            const minArr = minMax[0].split(",");
+            const maxArr = minMax[1].split(",");
+
+            const min = new Vector(
+                parseFloat(minArr[0]),
+                parseFloat(minArr[1]),
+                parseFloat(minArr[2])
+            );
+            const max = new Vector(
+                parseFloat(maxArr[0]),
+                parseFloat(maxArr[1]),
+                parseFloat(maxArr[2])
+            );
+            return this.fromVectors(min, max)
+        } catch (err) {
+            console.error(`Parsing error: ${err}`);
+            return this.AIR;
+        }
     }
 
     public toString(): string {
