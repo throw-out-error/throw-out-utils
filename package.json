@@ -5,12 +5,11 @@
     "scripts": {
         "prepublishOnly": "npm test && npm run lint",
         "prepare": "npm run build",
-        "version": "npm run format && git add -A src",
+        "version": "git add -A src",
         "build": "tsc --build && npm run bundle",
         "bundle": "browserify --standalone throw-out-utils src/index.ts -p [ tsify ] > dist/bundle.js",
         "preversion": "npm run lint",
-        "format": "prettier --write \"src/**/*.ts\"",
-        "lint": "eslint src/**"
+        "lint": "eslint src/**/*.ts --quiet --fix"
     },
     "types": "dist/index.d.ts",
     "typescript": {
