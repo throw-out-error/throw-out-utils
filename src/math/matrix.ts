@@ -88,7 +88,7 @@ export class Matrix {
     /**
      * Apply function to all elements in this matrix.
      *
-     * @param {Function} transformFn With signature (double) => double
+     * @param {Function} transformFn With signature (number, row, col) => number
      */
     map(transformFn: Function): Matrix {
         const thisData = this.data,
@@ -101,7 +101,7 @@ export class Matrix {
             result[row] = new Array(cols);
 
             for (let col = 0; col < cols; ++col) {
-                result[row][col] = transformFn(thisData[row][col]);
+                result[row][col] = transformFn(thisData[row][col], row, col);
             }
         }
 
