@@ -73,6 +73,16 @@ export class Matrix {
             throw new Error(
                 "Can't perform dot operation on matrices whose number of rows is not equivalent of the first matrix's number of columns"
             );
+        const result = new Matrix(this.rows, m.columns);
+        for (let i = 0; i < result.rows; i++)
+            for (let j = 0; j < result.columns; j++) {
+                // Dot product of values in col
+                let sum = 0;
+                for (let k = 0; k < this.columns; k++)
+                    sum += this.data[i][k] * m.data[k][j];
+                result.data[i][j] = sum;
+            }
+        return result;
     }
 
     /**
@@ -141,10 +151,10 @@ export class Matrix {
         return result;
     }
 
-    static random(rows: number, columns: number): Matrix {
-        const result = new Matrix(rows, columns);
-        for (let i = 0; i < rows; i++)
-            for (let j = 0; j < columns; j++) result.data[i][j] = Math.random();
-        return result;
+    randomize(multiplier = 1): Matrix {
+        for (let i = 0; i < this.rows; i++)
+            for (let j = 0; j < this.columns; j++)
+                this.data[i][j] = Math.floor(Math.random() * multiplier);
+        return this;
     }
 }
