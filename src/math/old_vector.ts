@@ -1,5 +1,6 @@
-import { Direction } from "./direction";
+import { Direction } from "../direction";
 
+// TODO: REMOVE
 export class Vector {
     x: number;
     y: number;
@@ -55,7 +56,7 @@ export class Vector {
         return this.add(dirVec);
     }
 
-    subtract(v: Vector | number): Vector {
+    sub(v: Vector | number): Vector {
         if (v instanceof Vector)
             return this.set(this.x - v.x, this.y - v.y, this.z - v.z);
         else return this.set(this.x - v, this.y - v, this.z - v);
@@ -170,7 +171,7 @@ export class Vector {
      * distance(${1:otherVector});
      */
     distance(vector: Vector): number {
-        return vector.clone().subtract(this).magnitude();
+        return vector.clone().sub(this).magnitude();
     }
 
     length(): number {
@@ -189,7 +190,7 @@ export class Vector {
         return Math.max(Math.max(this.x, this.y), this.z);
     }
 
-    toAngles(): any {
+    toAngles(): Record<string, number> {
         return {
             theta: Math.atan2(this.z, this.x),
             phi: Math.asin(this.y / this.length()),
@@ -228,7 +229,7 @@ export class Vector {
     }
 
     lerp(a: Vector, b: Vector, fraction: number): Vector {
-        return b.clone().subtract(a).scale(fraction).add(a);
+        return b.clone().sub(a).scale(fraction).add(a);
     }
 
     toString(): string {

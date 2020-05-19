@@ -1,7 +1,7 @@
 import { Vector } from "./vector";
 
 export class Cuboid {
-    public static AIR: Cuboid = new Cuboid(0, 0, 0, 0, 0, 0);
+    public static EMPTY: Cuboid = new Cuboid(0, 0, 0, 0, 0, 0);
     public static FULL_CUBE: Cuboid = new Cuboid(0, 0, 0, 1, 1, 1);
 
     protected minimumPoint: Vector;
@@ -15,8 +15,8 @@ export class Cuboid {
         y2: number,
         z2: number
     ) {
-        this.minimumPoint = new Vector(x1, y1, z1);
-        this.maximumPoint = new Vector(x2, y2, z2);
+        this.minimumPoint = Vector.from(x1, y1, z1);
+        this.maximumPoint = Vector.from(x2, y2, z2);
     }
 
     public static fromVector(v: Vector): Cuboid {
@@ -29,7 +29,7 @@ export class Cuboid {
      * @param p2 The maximum point
      */
     public static fromVectors(p1: Vector, p2: Vector): Cuboid {
-        return new Cuboid(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+        return new Cuboid(p1.x(), p1.y(), p1.z(), p2.x(), p2.y(), p2.z());
     }
 
     public equals(c: Cuboid): boolean {
@@ -44,27 +44,27 @@ export class Cuboid {
     }
 
     public minX(): number {
-        return this.minimumPoint.x;
+        return this.minimumPoint.x();
     }
 
     public minY(): number {
-        return this.minimumPoint.y;
+        return this.minimumPoint.y();
     }
 
     public minZ(): number {
-        return this.minimumPoint.z;
+        return this.minimumPoint.z();
     }
 
     public maxX(): number {
-        return this.maximumPoint.x;
+        return this.maximumPoint.x();
     }
 
     public maxY(): number {
-        return this.maximumPoint.y;
+        return this.maximumPoint.y();
     }
 
     public maxZ(): number {
-        return this.maximumPoint.z;
+        return this.maximumPoint.z();
     }
 
     public clone(): Cuboid {
@@ -80,7 +80,7 @@ export class Cuboid {
         for (let i = this.minX(); i < this.maxX(); i++) {
             for (let j = this.minY(); j < this.maxY(); j++) {
                 for (let k = this.minZ(); k < this.maxZ(); k++) {
-                    arr.push(new Vector(i, j, k));
+                    arr.push(Vector.from(i, j, k));
                 }
             }
         }
@@ -180,22 +180,22 @@ export class Cuboid {
     /**
      * Offsets the current bounding box by the specified amount.
      */
-    public offset(x: number, y: number, z: number): Cuboid {
+    public offset(n = 1, x: number, y: number, z: number): Cuboid {
         return new Cuboid(
-            this.minX() + x,
-            this.minY() + y,
-            this.minZ() + z,
-            this.maxX() + x,
-            this.maxY() + y,
-            this.maxZ() + z
+            this.minX() + x * n,
+            this.minY() + y * n,
+            this.minZ() + z * n,
+            this.maxX() + x * n,
+            this.maxY() + y * n,
+            this.maxZ() + z * n
         );
     }
 
     /**
      * Offsets the current bounding box by the specified amount.
      */
-    public offsetVector(vec: Vector): Cuboid {
-        return this.offset(vec.x, vec.y, vec.z);
+    public offsetVector(n = 1, vec: Vector): Cuboid {
+        return this.offset(n, vec.x(), vec.y(), vec.z());
     }
 
     /**
@@ -232,12 +232,12 @@ export class Cuboid {
 
     public intersectsVector(min: Vector, max: Vector): boolean {
         return this.intersects(
-            Math.min(min.x, max.x),
-            Math.min(min.y, max.y),
-            Math.min(min.z, max.z),
-            Math.max(min.x, max.x),
-            Math.max(min.y, max.y),
-            Math.max(min.z, max.z)
+            min.x(),
+            max.x(),
+            min.y(),
+            max.y(),
+            min.z(),
+            max.z()
         );
     }
 
@@ -245,7 +245,7 @@ export class Cuboid {
      * Returns if the supplied vector is compconstely inside the bounding box
      */
     public containsVector(v: Vector): boolean {
-        return this.contains(v.x, v.y, v.z);
+        return this.contains(v.x(), v.y(), v.z());
     }
 
     public contains(x: number, y: number, z: number): boolean {
@@ -305,20 +305,20 @@ export class Cuboid {
             const minArr = minMax[0].split(",");
             const maxArr = minMax[1].split(",");
 
-            const min = new Vector(
+            const min = Vector.from(
                 parseFloat(minArr[0]),
                 parseFloat(minArr[1]),
                 parseFloat(minArr[2])
             );
-            const max = new Vector(
+            const max = Vector.from(
                 parseFloat(maxArr[0]),
                 parseFloat(maxArr[1]),
                 parseFloat(maxArr[2])
             );
-            return this.fromVectors(min, max)
+            return this.fromVectors(min, max);
         } catch (err) {
             console.error(`Parsing error: ${err}`);
-            return this.AIR;
+            return this.EMPTY;
         }
     }
 
@@ -341,7 +341,7 @@ export class Cuboid {
     }
 
     getCenter(): Vector {
-        return new Vector(
+        return Vector.from(
             this.minX() + (this.maxX() - this.minX()) * 0.5,
             this.minY() + (this.maxY() - this.minY()) * 0.5,
             this.minZ() + (this.maxZ() - this.minZ()) * 0.5
