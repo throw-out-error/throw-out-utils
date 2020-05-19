@@ -79,6 +79,10 @@ export class Vector extends Matrix {
         return this.add(dirVec);
     }
 
+    dimensions(): number {
+        return this.data.length
+    }
+
     add(n: Vector | number): Vector {
         return Vector.fromMatrix(super.add(n));
     }
