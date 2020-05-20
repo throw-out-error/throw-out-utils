@@ -68,7 +68,7 @@ export class Matrix {
         return this;
     }
 
-    dot(m: Matrix): any {
+    dot(m: Matrix): Matrix {
         if (this.columns !== m.rows)
             throw new Error(
                 "Can't perform dot operation on matrices whose number of rows is not equivalent of the first matrix's number of columns"
@@ -118,14 +118,6 @@ export class Matrix {
         for (let i = 0; i < this.rows; i++)
             for (let j = 0; j < this.columns; j++) this.data[i][j] /= n;
         return this;
-    }
-
-    unit(): Matrix {
-        return this.divide(this.length());
-    }
-
-    length(): number {
-        return Math.sqrt(this.dot(this));
     }
 
     negate(): Matrix {

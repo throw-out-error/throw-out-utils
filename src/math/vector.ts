@@ -1,23 +1,26 @@
-import { Matrix } from "./matrix";
 import { Direction } from "../direction";
 
-export class Vector extends Matrix {
-    static EMPTY: Vector = Vector.from(0, 0, 0)
+export class Vector {
+    static EMPTY: Vector = Vector.from(0, 0, 0);
+    data: number[];
+    originalLength: number;
 
     constructor(length: number) {
-        super(length, 1);
+        this.data = [];
+        this.originalLength = length;
+        for (let i = 0; i < length; i++) this.data[i] = 0;
     }
 
     x(): number {
-        return this.data[0][0];
+        return this.data[0];
     }
 
     y(): number {
-        return this.data[1][0];
+        return this.data[1];
     }
 
     z(): number {
-        return this.data[2][0];
+        return this.data[2];
     }
 
     set(...n: Array<number>): Vector {
@@ -25,20 +28,18 @@ export class Vector extends Matrix {
         return this;
     }
 
-    static fromArray(array: number[] | number[][]): Vector {
-        return Vector.fromMatrix(super.fromArray(array));
+    static fromArray(array: number[]): Vector {
+        const result = new Vector(array.length);
+        result.data = array;
+        return result;
     }
 
     static from(...n: number[]): Vector {
         return Vector.fromArray(n);
     }
 
-    static fromMatrix(m: Matrix): Vector {
-        const v = new Vector(m.rows)
-        m.data.forEach((_v1: number[], i: number) =>
-            _v1.forEach((v2: number) => (v.data[i][0] = v2))
-        );
-        return v;
+    static fromString(s: string): Vector {
+        return Vector.fromArray(s.split(",").map((sv) => parseFloat(sv)));
     }
 
     toString(): string {
@@ -52,7 +53,7 @@ export class Vector extends Matrix {
      * @param direction the direction to offset in
      */
     offset(n = 1, direction: Direction): Vector {
-        let dirVec = Vector.EMPTY.clone()
+        let dirVec = Vector.EMPTY.clone();
         switch (direction) {
             case Direction.UP:
                 dirVec = Vector.from(0, 1, 0);
@@ -80,50 +81,110 @@ export class Vector extends Matrix {
     }
 
     dimensions(): number {
-        return this.data.length
-    }
-
-    add(n: Vector | number): Vector {
-        return Vector.fromMatrix(super.add(n));
-    }
-
-    sub(n: Vector | number): Vector {
-        return Vector.fromMatrix(super.sub(n));
-    }
-
-    scale(n: number): Vector {
-        return Vector.fromMatrix(super.scale(n));
-    }
-
-    divide(n: number): Vector {
-        return Vector.fromMatrix(super.scale(n));
-    }
-
-    equals(m: Vector): boolean {
-        return super.equals(m);
+        return this.data.length;
     }
 
     /**
-        Copies the current vector and returns the new copy.
-        This is used if you don't want to modify the original vector when using operations.
+        Copies the current Vector and returns the new copy.
+        This is used if you don't want to modify the original Vector when using operations.
     */
     clone(): Vector {
-        return Vector.fromMatrix(super.clone());
+        const m: Vector = new Vector(this.originalLength);
+        m.data = this.data;
+        return m;
     }
 
+    add(n: Vector | number): Vector {
+        if (n instanceof Vector) {
+            for (let i = 0; i < this.originalLength; i++)
+                this.data[i] += n.data[i];
+        } else if (typeof n === "number") {
+            for (let i = 0; i < this.originalLength; i++) this.data[i] += n;
+        }
+        return this;
+    }
+
+    sub(n: Vector | number): Vector {
+        if (n instanceof Vector) {
+            if (this.originalLength !== n.originalLength)
+                throw new Error(
+                    "Can't perform sub operation on matrices with differing dimensions"
+                );
+            for (let i = 0; i < this.originalLength; i++)
+                this.data[i] += n.data[i];
+        } else if (typeof n === "number") {
+            for (let i = 0; i < this.originalLength; i++) this.data[i] += n;
+        }
+        return this;
+    }
+
+    dot(m: Vector): number {
+        if (this.originalLength !== m.originalLength)
+            throw new Error(
+                "Can't perform dot operation on matrices whose number of rows is not equivalent of the first Vector's number of columns"
+            );
+        let result = 0;
+        for (let k = 0; k < this.originalLength; k++)
+            result += this.data[k] * m.data[k];
+
+        return result;
+    }
+
+    /**
+     * Apply function to all elements in this Vector.
+     *
+     * @param {Function} transformFn With signature (number, row, col) => number
+     */
     map(transformFn: Function): Vector {
-        return Vector.fromMatrix(super.map(transformFn));
+        const thisData = this.data,
+            rows = this.originalLength;
+
+        const result = new Array(rows);
+        for (let row = 0; row < rows; ++row) {
+            result[row] = transformFn(thisData[row], row);
+        }
+
+        return Vector.fromArray(result);
+    }
+
+    scale(n: number): Vector {
+        for (let i = 0; i < this.originalLength; i++) this.data[i] *= n;
+        return this;
+    }
+
+    divide(n: number): Vector {
+        for (let i = 0; i < this.originalLength; i++) this.data[i] /= n;
+        return this;
+    }
+
+    unit(): Vector {
+        return this.divide(this.length());
+    }
+
+    length(): number {
+        return Math.sqrt(this.dot(this));
     }
 
     negate(): Vector {
-        return Vector.fromMatrix(super.negate());
+        for (let i = 0; i < this.originalLength; i++)
+            this.data[i] = -this.data[i];
+        return this;
     }
 
     lerp(a: Vector, b: Vector, fraction: number): Vector {
-        return Vector.fromMatrix(super.lerp(a, b, fraction));
+        return b.clone().sub(a).scale(fraction).add(a);
     }
 
-    transpose(): Vector {
-        return Vector.fromMatrix(super.transpose());
+    equals(m: Vector): boolean {
+        if (this.originalLength != m.originalLength) return false;
+        for (let i = 0; i < this.originalLength; i++)
+            if (this.data[i] != m.data[i]) return false;
+        return true;
+    }
+
+    randomize(multiplier = 1): Vector {
+        for (let i = 0; i < this.originalLength; i++)
+            this.data[i] = Math.floor(Math.random() * multiplier);
+        return this;
     }
 }

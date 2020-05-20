@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7
+
+Vectors no longer extend Matrix, and each Vector's data is now an normal array instead of a multi-dimensional array. Vectors will still work the same in terms of the operations.
+
 ## 1.0.6
 
 ### Matrices
