@@ -1,4 +1,3 @@
-export * from "./astar";
 export * from "./java";
 export * from "./misc";
 export * from "./mod";

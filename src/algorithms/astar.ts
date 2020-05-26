@@ -1,5 +1,5 @@
 import assert from "assert";
-import { PriorityQueue } from "./algorithms";
+import { PriorityQueue } from ".";
 
 function reconstructPath(node): any[] {
     if (node.parent !== undefined) {
