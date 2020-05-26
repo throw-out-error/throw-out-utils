@@ -4,4 +4,5 @@ export * from "./misc";
 export * from "./mod";
 export * from "./math/math";
 export * from './direction';
-export * as Perlin from 'libnoise-ts/module/generator/perlin';
+export * from './sorting'
+export * from './algorithms'

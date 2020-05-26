@@ -1,5 +1,5 @@
 import assert from "assert";
-import FastPriorityQueue from "fastpriorityqueue";
+import { PriorityQueue } from "./algorithms";
 
 function reconstructPath(node): any[] {
     if (node.parent !== undefined) {
@@ -16,8 +16,8 @@ function defaultHash(node): string {
     return node.toString();
 }
 
-function heapComparator(a, b): boolean {
-    return a.f < b.f ? true : false;
+function heapComparator(a, b): number {
+    return a.f - b.f;
 }
 
 export class PathfindingResult {
@@ -35,7 +35,7 @@ export class PathfindingResult {
 /**
   Credit goes to https://github.com/andrewrk/node-astar
  */
-export const aStar = (params): PathfindingResult => {
+export const aStar = (params: any): PathfindingResult => {
     assert.ok(params.start !== undefined);
     assert.ok(params.isEnd !== undefined);
     assert.ok(params.neighbor);
@@ -55,9 +55,9 @@ export const aStar = (params): PathfindingResult => {
     startNode.f = startNode.h;
     // leave .parent undefined
     const closedDataSet = new Set();
-    const openHeap = new FastPriorityQueue(heapComparator);
+    const openHeap = new PriorityQueue({ comparator: heapComparator });
     const openDataMap = new Map();
-    openHeap.add(startNode);
+    openHeap.enqueue(startNode);
     openDataMap.set(hash(startNode.data), startNode);
     const startTime = new Date();
     while (openHeap.size) {
@@ -115,7 +115,7 @@ export const aStar = (params): PathfindingResult => {
             if (update) {
                 // openHeap.heapify()
             } else {
-                openHeap.add(neighborNode);
+                openHeap.enqueue(neighborNode);
             }
         }
     }
