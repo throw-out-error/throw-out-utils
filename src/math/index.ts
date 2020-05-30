@@ -1,6 +1,6 @@
-import { Tensor } from './tensor';
+import { Tensor } from "./tensor";
 
-export * from './easing'
+export * from "./easing";
 export * from "./tensor";
 export * from "./cuboid";
 
@@ -21,4 +21,4 @@ export const euclideanMod = (
 };
 
 export const dist = (loc1: Tensor, loc2: Tensor): number =>
-    loc1.x() - loc2.x() + (loc1.y() - loc2.y()) + (loc1.z() - loc2.z());
+    loc1.x - loc2.x + (loc1.y - loc2.y) + (loc1.z - loc2.z);

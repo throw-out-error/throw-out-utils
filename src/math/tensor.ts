@@ -2,7 +2,12 @@ import { Direction } from "../direction";
 
 export type Scalar = [];
 export type Vector = [3];
-export type Matrix = [3, 3];
+
+export function isVector<T extends TypedArray>(
+    v: Tensor<number[], T>
+): v is Tensor<Vector, T> {
+    return v.size.length === 1 && v.size[0] === 3;
+}
 
 export type Float32Array = globalThis.Float32Array;
 export type Float64Array = globalThis.Float64Array;
@@ -29,16 +34,16 @@ type NDArray = number | ArrayLike<number> | ArrayLike<NDArray>;
 
 export class Tensor<
     S extends number[] = number[],
-    T extends TypedArray = Float64Array
+    T extends TypedArray = TypedArray
 > {
-    public static get ZERO(): Tensor {
-        return Tensor.zeros([1]);
+    public static get ZERO(): Tensor<[]> {
+        return Tensor.zeros([]);
     }
-    public static get VECTOR_ZERO(): Tensor {
+    public static get VECTOR_ZERO(): Tensor<Vector> {
         return Tensor.zeros([3]);
     }
 
-    public static get MATRIX_ZERO(): Tensor {
+    public static get MATRIX_ZERO(): Tensor<[3, 3]> {
         return Tensor.zeros([3, 3]);
     }
 
@@ -60,7 +65,7 @@ export class Tensor<
         size?: S,
         type: {
             from(array: ArrayLike<number>): T;
-        } = Float64Array as any
+        } = Float64Array as never // never was the quick fix, seems like a good idea
     ) {
         if (!size) {
             size = ([] as unknown) as S;
@@ -71,26 +76,39 @@ export class Tensor<
             }
         }
 
-        this.data = type.from((data as number[]).flat(Infinity) ?? [data]) as T;
+        this.data = type.from((data as number[]).flat(Infinity) ?? [data]);
         if (this.data.length !== size.reduce((s, l) => s * l, 1)) {
             throw TypeError("Incorrect element count");
         }
         this.size = size;
     }
 
-    public x(): number {
-        return this.data[0][0];
+    public get x(): number {
+        return this.data[0];
     }
 
-    public y(): number {
-        return this.data[0][1];
+    public set x(value: number) {
+        this.data[0] = value;
     }
 
-    public z(): number {
-        return this.data[0][2];
+    public get y(): number {
+        return this.data[1];
     }
 
-    public set(...n: Array<number>): ThisType<Tensor> {
+    public set y(value: number) {
+        this.data[1] = value;
+    }
+
+    public get z(): number {
+        return this.data[2];
+    }
+
+    public set z(value: number) {
+        this.data[2] = value;
+    }
+
+    public set(...n: Array<number>): Tensor<S, T> {
+        this.data.set(n);
         return this;
     }
 
@@ -107,12 +125,31 @@ export class Tensor<
     }
 
     /**
+     * Offsets this tensor by the specified amount.
+     * If n is not specified then it will default to one unit.
+     * Keep in mind that this method does not clone the current Tensor. 
+     * Also, the size must match the value array's length.
+     * @param n The amount of units to offset to
+     * @param val The offset values (ex. offset(1, 0, 2, 0) will offset 2 units up)
+     */
+    public offset(n = 1, val: number[]): Tensor<S, T> {
+        // TODO: size check on val and this.size
+        if(this.size[0] != val.length) throw new Error("This tensor's size must be the same as the offset value array!")
+        this.map((v, i) => v + val[i] * n);
+        return this;
+    }
+
+    /**
      * Offsets this Tensor in the specified direction (n times).
      * If n is not specified then it will default to one unit in the direction specified.
      * Keep in mind that this method does not clone the current Tensor.
      * @param direction the direction to offset in
      */
-    public offset(n = 1, direction: Direction): ThisType<Tensor> {
+    public offsetDir(n = 1, direction: Direction): Tensor<Vector, T> {
+        if (!isVector(this)) {
+            throw TypeError("This tensor must be a Vector to be offsetted.");
+        }
+
         let dirVec = Tensor.VECTOR_ZERO.clone();
         switch (direction) {
             case Direction.UP:
@@ -135,9 +172,10 @@ export class Tensor<
                 break;
         }
 
-        // if (n) dirVec = dirVec.scale(n);
+        dirVec.scale(n);
 
-        return this.add(dirVec);
+        this.add(dirVec);
+        return this;
     }
 
     public dimensions() {
@@ -147,40 +185,38 @@ export class Tensor<
         Copies the current Tensor and returns the new copy.
         This is used if you don't want to modify the original Tensor when using operations.
     */
-    public clone(): Tensor {
+    public clone(): Tensor<S, T> {
         const d: number[] = [];
         this.data.forEach((n) => d.push(n));
-        const m: Tensor = new Tensor(d, this.size);
+        const m: Tensor<S, T> = new Tensor(d, this.size);
         return m;
     }
 
-    public add(n: Tensor | number): ThisType<Tensor> {
-        if (n instanceof Tensor) {
-            this.data.forEach((v, r, c) => {
-                if ((this.data[r] as any) instanceof Array)
-                    this.data[r][c] = this.data[r][c] + n.data[r][c];
-                else this.data[r] = this.data[r] + n.data[r];
-            });
-        } else if (typeof n === "number") {
-            this.data.map((v) => v + n);
+    public add(n: Tensor<S> | number): Tensor<S, T> {
+        if (typeof n === "number") {
+            this.map((v) => v + n);
+            return this;
         }
+
+        if (this.size.some((v, i) => n.size[i] !== v)) {
+            throw TypeError("Tensor have to have the same size");
+        }
+
+        this.map((v, i) => v + n.data[i]);
         return this;
     }
 
-    sub(n: Tensor | number): ThisType<Tensor> {
-        if (n instanceof Tensor) {
-            if (this.size !== n.size)
-                throw new Error(
-                    "Can't perform sub operation on matrices with differing dimensions"
-                );
-            this.data.forEach((v, r, c) => {
-                if ((this.data[r] as any) instanceof Array)
-                    this.data[r][c] = this.data[r][c] - n.data[r][c];
-                else this.data[r] = this.data[r] - n.data[r];
-            });
-        } else if (typeof n === "number") {
-            this.data.map((v) => v - n);
+    sub(n: Tensor | number): Tensor<S, T> {
+        if (typeof n === "number") {
+            this.map((v) => v - n);
+            return this;
         }
+
+        if (this.size.some((v, i) => n.size[i] !== v)) {
+            throw TypeError("Tensor have to have the same size");
+        }
+
+        this.map((v, i) => v - n.data[i]);
         return this;
     }
 
@@ -190,11 +226,7 @@ export class Tensor<
                 "Can't perform dot operation on matrices whose number of rows is not equivalent of the first Tensor's number of columns"
             );
         let result = 0;
-        this.forEach((v, r, c) => {
-            if ((this.data[r] as any) instanceof Array)
-                result += this.data[r][c] * m.data[r][c];
-            else result += this.data[r] * m.data[r];
-        });
+        this.forEach((v, i) => (result += this.data[i] * m.data[i]));
         return result;
     }
 
@@ -204,49 +236,36 @@ export class Tensor<
      * @param {Function} transformFn With signature (number, row, col) => number
      */
     map(
-        transformFn: (n: number, row: number, col: number) => number
+        callback: (val: number, index: number, arr: ArrayLike<number>) => number
     ): ThisType<Tensor> {
-        const rows = this.size[0],
-            cols = this.size[1] || 1;
-
-        for (let r = 0; r < rows; r++)
-            for (let c = 0; c < cols; c++) {
-                if ((this.data[r] as any) instanceof Array)
-                    this.data[r][c] = transformFn(this.data[r][c], r, c);
-                else this.data[r] = transformFn(this.data[r], r, c);
-            }
+        this.data = this.data.map(callback) as T;
         return this;
     }
 
     /**
      * Iterate over all the elements in this tensor.
      *
-     * @param {Function} transformFn With signature (number, row, col) => number
+     * @param {Function} transformFn With signature (value, index, array) => void
      */
     forEach(
-        callback: (n: number, row: number, col: number) => void
+        callback: (val: number, index: number, arr: ArrayLike<number>) => void
     ): ThisType<Tensor> {
-        const rows = this.size[0],
-            cols = this.size[1] || 1;
-
-        for (let row = 0; row < rows; row++)
-            for (let col = 0; col < cols; col++) {
-                // console.log(JSON.stringify(this.data[row]))
-                if ((this.data[row] as any) instanceof Array)
-                    callback(this.data[row][col], row, col);
-                else callback(this.data[row], row, col);
-            }
-
+        this.data.forEach(callback);
         return this;
     }
 
-    scale(n: number): ThisType<Tensor> {
-        return this.map((v) => (v *= n));
+    scale(factor: number): Tensor<S, T> {
+        this.map((v) => v * factor);
+        return this;
     }
 
-    divide(n: number): ThisType<Tensor> {
-        return this.map((v) => (v /= n));
+    mult = this.scale;
+
+    divide(n: number): Tensor<S, T> {
+        return this.mult(1 / n);
     }
+
+    div = this.divide;
 
     // unit(): ThisType<Tensor> {
     //     return this.divide(this.length());
@@ -261,15 +280,15 @@ export class Tensor<
         return this.map((v) => (v = -v));
     }
 
-    // lerp(a: Tensor, b: Tensor, fraction: number): Tensor {
-    //     return b.clone().sub(a).scale(fraction).add(a);
-    // }
+    lerp(a: Tensor, b: Tensor, fraction: number): Tensor {
+        return b.clone().sub(a).scale(fraction).add(a);
+    }
 
     equals(m: Tensor): boolean {
         return this.data.toString() === m.data.toString();
     }
 
-    static random(size: number[], multiplier = 1): Tensor {
+    static random<S extends number[]>(size: S, multiplier = 1): Tensor<S> {
         const result = Tensor.zeros(size);
         result.map(() => Math.floor(Math.random() * multiplier));
         return result;

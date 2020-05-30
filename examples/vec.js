@@ -13,5 +13,3 @@ console.log(above.toString())
 
 // Prints: Equal: false
 console.log(`Equal: ${above.equals(v)}`)
-
-console.log(above.x())

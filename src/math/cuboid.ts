@@ -29,7 +29,7 @@ export class Cuboid {
      * @param p2 The maximum point
      */
     public static fromVectors(p1: Tensor, p2: Tensor): Cuboid {
-        return new Cuboid(p1.x(), p1.y(), p1.z(), p2.x(), p2.y(), p2.z());
+        return new Cuboid(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
     }
 
     public equals(c: Cuboid): boolean {
@@ -44,27 +44,27 @@ export class Cuboid {
     }
 
     public minX(): number {
-        return this.minimumPoint.x();
+        return this.minimumPoint.x;
     }
 
     public minY(): number {
-        return this.minimumPoint.y();
+        return this.minimumPoint.y;
     }
 
     public minZ(): number {
-        return this.minimumPoint.z();
+        return this.minimumPoint.z;
     }
 
     public maxX(): number {
-        return this.maximumPoint.x();
+        return this.maximumPoint.x;
     }
 
     public maxY(): number {
-        return this.maximumPoint.y();
+        return this.maximumPoint.y;
     }
 
     public maxZ(): number {
-        return this.maximumPoint.z();
+        return this.maximumPoint.z;
     }
 
     public clone(): Cuboid {
@@ -195,7 +195,7 @@ export class Cuboid {
      * Offsets the current bounding box by the specified amount.
      */
     public offsetVector(n = 1, vec: Tensor): Cuboid {
-        return this.offset(n, vec.x(), vec.y(), vec.z());
+        return this.offset(n, vec.x, vec.y, vec.z);
     }
 
     /**
@@ -232,12 +232,12 @@ export class Cuboid {
 
     public intersectsVector(min: Tensor, max: Tensor): boolean {
         return this.intersects(
-            min.x(),
-            max.x(),
-            min.y(),
-            max.y(),
-            min.z(),
-            max.z()
+            min.x,
+            max.x,
+            min.y,
+            max.y,
+            min.z,
+            max.z
         );
     }
 
@@ -245,7 +245,7 @@ export class Cuboid {
      * Returns if the supplied vector is compconstely inside the bounding box
      */
     public containsVector(v: Tensor): boolean {
-        return this.contains(v.x(), v.y(), v.z());
+        return this.contains(v.x, v.y, v.z);
     }
 
     public contains(x: number, y: number, z: number): boolean {

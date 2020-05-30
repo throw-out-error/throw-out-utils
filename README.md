@@ -11,17 +11,31 @@ Throw Out Utils also comes with a bundle.js file that can be used in the browser
 You can create a tensor by importing `Tensor` from `@throw-out-error/throw-out-utils` and then calling `new Tensor(DATA, SIZE)`. The data is obviously the data, and the size is an number array. For example:
 
 ```ts
-const t = new Tensor([1, 2, 3], [3])
+const t = new Tensor([1, 2, 3], [3]);
 ```
 
 If you want to pass in vector data easily, you can do something like this:
 
 ```ts
 // Using Tensor.from makes it easier to use with vector data
-const t = Tensor.from(1, 2, 3)
+const t = Tensor.from(1, 2, 3);
 ```
 
 If you want to create an empty tensor filled with zeros, use `Tensor.zeros(SIZE)`.
+
+You can also import `Vector` from this package, which is equivalent to `[3]`:
+
+```ts
+import { Tensor, Vector } from '@throw-out-error/throw-out-utils"
+const t = Tensor.from<Vector>(1, 2, 3)
+```
+
+Tensors still have .x, .y, & .z as Vectors did so you should be able to do
+```ts
+import { Tensor, Vector } from '@throw-out-error/throw-out-utils"
+const t = Tensor.from<Vector>(1, 2, 3)
+console.log(t.x) // Should print 1
+```
 
 ## Cuboids
 
