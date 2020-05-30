@@ -4,19 +4,32 @@ export type Scalar = [];
 export type Vector = [3];
 export type Matrix = [3, 3];
 
-type ConstructorReturnType<
-    T extends new (...args: any) => any
-> = T extends new (...args: any) => infer R ? R : any;
+export type Float32Array = globalThis.Float32Array;
+export type Float64Array = globalThis.Float64Array;
+export type Int8Array = globalThis.Int8Array;
+export type Int16Array = globalThis.Int16Array;
+export type Int32Array = globalThis.Int32Array;
+export type Uint8ClampedArray = globalThis.Uint8ClampedArray;
+export type Uint8Array = globalThis.Uint8Array;
+export type Uint16Array = globalThis.Uint16Array;
+export type Uint32Array = globalThis.Uint32Array;
 
-type TypedArray =
-    | ConstructorReturnType<Float64ArrayConstructor>
-    | ConstructorReturnType<Int16ArrayConstructor>; // and so on, probably have to try out here.
+export type TypedArray =
+    | Float32Array
+    | Float64Array
+    | Int8Array
+    | Int16Array
+    | Int32Array
+    | Uint8ClampedArray
+    | Uint8Array
+    | Uint16Array
+    | Uint32Array;
 
-type NDArray = number | NDArray[];
+type NDArray = number | ArrayLike<number> | ArrayLike<NDArray>;
 
 export class Tensor<
     S extends number[] = number[],
-    T extends TypedArray = TypedArray
+    T extends TypedArray = Float64Array
 > {
     public static get ZERO(): Tensor {
         return Tensor.zeros([1]);
@@ -42,14 +55,20 @@ export class Tensor<
     data: T;
     size: S;
 
-    constructor(data: NDArray, size?: S, type = Float64Array) {
+    constructor(
+        data: NDArray,
+        size?: S,
+        type: {
+            from(array: ArrayLike<number>): T;
+        } = Float64Array as any
+    ) {
         if (!size) {
-            size = new Array<number>() as S;
-            size[0] = data instanceof Array ? data.length : 1;
-            size[1] =
-                data instanceof Array && data[0] instanceof Array
-                    ? data[0].length
-                    : 1;
+            size = ([] as unknown) as S;
+            let dim = data;
+            while (Array.isArray(dim)) {
+                size.push(dim.length);
+                dim = dim[0];
+            }
         }
 
         this.data = type.from((data as number[]).flat(Infinity) ?? [data]) as T;
@@ -71,7 +90,7 @@ export class Tensor<
         return this.data[0][2];
     }
 
-    public set(...n: Array<number>): Tensor {
+    public set(...n: Array<number>): ThisType<Tensor> {
         return this;
     }
 
@@ -93,7 +112,7 @@ export class Tensor<
      * Keep in mind that this method does not clone the current Tensor.
      * @param direction the direction to offset in
      */
-    public offset(n = 1, direction: Direction): Tensor {
+    public offset(n = 1, direction: Direction): ThisType<Tensor> {
         let dirVec = Tensor.VECTOR_ZERO.clone();
         switch (direction) {
             case Direction.UP:
@@ -116,7 +135,7 @@ export class Tensor<
                 break;
         }
 
-        if (n) dirVec = dirVec.scale(n);
+        // if (n) dirVec = dirVec.scale(n);
 
         return this.add(dirVec);
     }
@@ -135,7 +154,7 @@ export class Tensor<
         return m;
     }
 
-    public add(n: Tensor | number): Tensor {
+    public add(n: Tensor | number): ThisType<Tensor> {
         if (n instanceof Tensor) {
             this.data.forEach((v, r, c) => {
                 if ((this.data[r] as any) instanceof Array)
@@ -148,7 +167,7 @@ export class Tensor<
         return this;
     }
 
-    sub(n: Tensor | number): Tensor {
+    sub(n: Tensor | number): ThisType<Tensor> {
         if (n instanceof Tensor) {
             if (this.size !== n.size)
                 throw new Error(
@@ -184,7 +203,9 @@ export class Tensor<
      *
      * @param {Function} transformFn With signature (number, row, col) => number
      */
-    map(transformFn: (n: number, row: number, col: number) => number): Tensor {
+    map(
+        transformFn: (n: number, row: number, col: number) => number
+    ): ThisType<Tensor> {
         const rows = this.size[0],
             cols = this.size[1] || 1;
 
@@ -202,7 +223,9 @@ export class Tensor<
      *
      * @param {Function} transformFn With signature (number, row, col) => number
      */
-    forEach(callback: (n: number, row: number, col: number) => void): Tensor {
+    forEach(
+        callback: (n: number, row: number, col: number) => void
+    ): ThisType<Tensor> {
         const rows = this.size[0],
             cols = this.size[1] || 1;
 
@@ -217,29 +240,30 @@ export class Tensor<
         return this;
     }
 
-    scale(n: number): Tensor {
+    scale(n: number): ThisType<Tensor> {
         return this.map((v) => (v *= n));
     }
 
-    divide(n: number): Tensor {
+    divide(n: number): ThisType<Tensor> {
         return this.map((v) => (v /= n));
     }
 
-    unit(): Tensor {
-        return this.divide(this.length());
-    }
+    // unit(): ThisType<Tensor> {
+    //     return this.divide(this.length());
+    // }
 
-    length(): number {
-        return Math.sqrt(this.dot(this));
-    }
+    // // WTF
+    // length(): number {
+    //     return Math.sqrt(this.dot(this));
+    // }
 
-    negate(): Tensor {
+    negate(): ThisType<Tensor> {
         return this.map((v) => (v = -v));
     }
 
-    lerp(a: Tensor, b: Tensor, fraction: number): Tensor {
-        return b.clone().sub(a).scale(fraction).add(a);
-    }
+    // lerp(a: Tensor, b: Tensor, fraction: number): Tensor {
+    //     return b.clone().sub(a).scale(fraction).add(a);
+    // }
 
     equals(m: Tensor): boolean {
         return this.data.toString() === m.data.toString();
