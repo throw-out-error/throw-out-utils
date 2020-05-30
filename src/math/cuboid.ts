@@ -1,11 +1,11 @@
-import { Vector } from "./vector";
+import { Tensor, Vector } from "./tensor";
 
 export class Cuboid {
     public static EMPTY: Cuboid = new Cuboid(0, 0, 0, 0, 0, 0);
     public static FULL_CUBE: Cuboid = new Cuboid(0, 0, 0, 1, 1, 1);
 
-    protected minimumPoint: Vector;
-    protected maximumPoint: Vector;
+    protected minimumPoint: Tensor<Vector>;
+    protected maximumPoint: Tensor<Vector>;
 
     public constructor(
         x1: number,
@@ -15,11 +15,11 @@ export class Cuboid {
         y2: number,
         z2: number
     ) {
-        this.minimumPoint = Vector.from(x1, y1, z1);
-        this.maximumPoint = Vector.from(x2, y2, z2);
+        this.minimumPoint = Tensor.from<Vector>(x1, y1, z1);
+        this.maximumPoint = Tensor.from<Vector>(x2, y2, z2);
     }
 
-    public static fromVector(v: Vector): Cuboid {
+    public static fromVector(v: Tensor): Cuboid {
         return this.fromVectors(v, v);
     }
 
@@ -28,7 +28,7 @@ export class Cuboid {
      * @param p1 The minimum point
      * @param p2 The maximum point
      */
-    public static fromVectors(p1: Vector, p2: Vector): Cuboid {
+    public static fromVectors(p1: Tensor, p2: Tensor): Cuboid {
         return new Cuboid(p1.x(), p1.y(), p1.z(), p2.x(), p2.y(), p2.z());
     }
 
@@ -74,13 +74,13 @@ export class Cuboid {
     /**
      * Returns an array of all possible points in a cuboid.
      */
-    public all(): Vector[] {
-        const arr: Vector[] = [];
+    public all(): Tensor[] {
+        const arr: Tensor[] = [];
 
         for (let i = this.minX(); i < this.maxX(); i++) {
             for (let j = this.minY(); j < this.maxY(); j++) {
                 for (let k = this.minZ(); k < this.maxZ(); k++) {
-                    arr.push(Vector.from(i, j, k));
+                    arr.push(Tensor.from(i, j, k));
                 }
             }
         }
@@ -194,7 +194,7 @@ export class Cuboid {
     /**
      * Offsets the current bounding box by the specified amount.
      */
-    public offsetVector(n = 1, vec: Vector): Cuboid {
+    public offsetVector(n = 1, vec: Tensor): Cuboid {
         return this.offset(n, vec.x(), vec.y(), vec.z());
     }
 
@@ -230,7 +230,7 @@ export class Cuboid {
         );
     }
 
-    public intersectsVector(min: Vector, max: Vector): boolean {
+    public intersectsVector(min: Tensor, max: Tensor): boolean {
         return this.intersects(
             min.x(),
             max.x(),
@@ -244,7 +244,7 @@ export class Cuboid {
     /**
      * Returns if the supplied vector is compconstely inside the bounding box
      */
-    public containsVector(v: Vector): boolean {
+    public containsVector(v: Tensor): boolean {
         return this.contains(v.x(), v.y(), v.z());
     }
 
@@ -274,7 +274,7 @@ export class Cuboid {
      *
      * @return the vector containing the minimum point of this cuboid
      */
-    public getMinPoint(): Vector {
+    public getMinPoint(): Tensor {
         return this.minimumPoint;
     }
 
@@ -283,7 +283,7 @@ export class Cuboid {
      *
      * @return the vector containing the maximum point of this cuboid
      */
-    public getMaxPoint(): Vector {
+    public getMaxPoint(): Tensor {
         return this.maximumPoint;
     }
 
@@ -305,12 +305,12 @@ export class Cuboid {
             const minArr = minMax[0].split(",");
             const maxArr = minMax[1].split(",");
 
-            const min = Vector.from(
+            const min = Tensor.from(
                 parseFloat(minArr[0]),
                 parseFloat(minArr[1]),
                 parseFloat(minArr[2])
             );
-            const max = Vector.from(
+            const max = Tensor.from(
                 parseFloat(maxArr[0]),
                 parseFloat(maxArr[1]),
                 parseFloat(maxArr[2])
@@ -323,25 +323,11 @@ export class Cuboid {
     }
 
     public toString(): string {
-        return (
-            "" +
-            this.minX() +
-            "," +
-            this.minY() +
-            "," +
-            this.minZ() +
-            ":" +
-            this.maxX() +
-            "," +
-            this.maxY() +
-            "," +
-            this.maxZ() +
-            ""
-        );
+        return this.minimumPoint.toString() + ":" + this.maximumPoint.toString() 
     }
 
-    getCenter(): Vector {
-        return Vector.from(
+    getCenter(): Tensor {
+        return Tensor.from(
             this.minX() + (this.maxX() - this.minX()) * 0.5,
             this.minY() + (this.maxY() - this.minY()) * 0.5,
             this.minZ() + (this.maxZ() - this.minZ()) * 0.5

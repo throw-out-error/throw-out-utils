@@ -1,8 +1,8 @@
-import { Vector } from "./vector";
+import { Tensor } from './tensor';
+
 export * from './easing'
-export * from "./vector";
+export * from "./tensor";
 export * from "./cuboid";
-export * from './matrix'
 
 export const clamp = (x: number, min: number, max: number): number =>
     x < min ? min : x > max ? max : x;
@@ -20,5 +20,5 @@ export const euclideanMod = (
     return result < 0 ? result + denominator : result;
 };
 
-export const dist = (loc1: Vector, loc2: Vector): number =>
+export const dist = (loc1: Tensor, loc2: Tensor): number =>
     loc1.x() - loc2.x() + (loc1.y() - loc2.y()) + (loc1.z() - loc2.z());

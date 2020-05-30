@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8
+
+We have rewritten the Vector and Matrix class and merged them into something called Tensors. These are still WIP but can represent any dimension (3x3, 3x1, etc). See the README file for more information.
+
 ## 1.0.7
 
 Vectors no longer extend Matrix, and each Vector's data is now an normal array instead of a multi-dimensional array. Vectors will still work the same in terms of the operations.
@@ -13,6 +17,6 @@ Vectors can now be any dimension, which gives much more freedom. This also means
 
 ### New Features
 
-- Matrices
+-   Matrices
 
-- Easing functions
+-   Easing functions

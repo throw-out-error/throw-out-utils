@@ -6,9 +6,22 @@ Some of the other utilities include the Cuboid (a bounding box) and some math fu
 
 Throw Out Utils also comes with a bundle.js file that can be used in the browser. However, the browser module does not have documentation, but feel free to experiment with it. You can access it with `window.throwOutUtils` or just `throwOutUtils`.
 
-## Vectors
+## Tensors (WIP)
 
-A vector is a class that stores 3d coordinates and can be operated using multiplication, addition, etc. If the coordinates are not specified, it automatically uses the coordinates 0, 0, 0. See `examples/vec.js` for an example.
+You can create a tensor by importing `Tensor` from `@throw-out-error/throw-out-utils` and then calling `new Tensor(DATA, SIZE)`. The data is obviously the data, and the size is an number array. For example:
+
+```ts
+const t = new Tensor([1, 2, 3], [3])
+```
+
+If you want to pass in vector data easily, you can do something like this:
+
+```ts
+// Using Tensor.from makes it easier to use with vector data
+const t = Tensor.from(1, 2, 3)
+```
+
+If you want to create an empty tensor filled with zeros, use `Tensor.zeros(SIZE)`.
 
 ## Cuboids
 

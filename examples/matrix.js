@@ -1,13 +1,10 @@
-const { Vector, Matrix } = require('../dist/index')
+const { Tensor } = require("../dist/index");
 
-let a = new Matrix(2, 3)
-let b = new Matrix(3, 2)
+let a = Tensor.random([2, 3], 10);
+let b = Tensor.random([3, 2], 10);
 
-a.randomize(10)
-b.randomize(10)
+console.log(a.toString());
+console.log(b.toString());
 
-console.table(a.data)
-console.table(b.data)
-
-let c = a.dot(b)
-console.table(c.data)
+let c = a.dot(b);
+console.log(c);
