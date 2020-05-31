@@ -231,14 +231,7 @@ export class Cuboid {
     }
 
     public intersectsVector(min: Tensor, max: Tensor): boolean {
-        return this.intersects(
-            min.x,
-            max.x,
-            min.y,
-            max.y,
-            min.z,
-            max.z
-        );
+        return this.intersects(min.x, max.x, min.y, max.y, min.z, max.z);
     }
 
     /**
@@ -287,16 +280,12 @@ export class Cuboid {
         return this.maximumPoint;
     }
 
-    public getXSize(): number {
-        return this.maxX() - this.minX();
-    }
-
-    public getYSize(): number {
-        return this.maxY() - this.minY();
-    }
-
-    public getZSize(): number {
-        return this.maxZ() - this.minZ();
+    public getSize(): Tensor<Vector> {
+        return Tensor.from<Vector>(
+            this.maxX() - this.minX(),
+            this.maxY() - this.minY(),
+            this.maxZ() - this.minZ()
+        );
     }
 
     static fromString(s: string): Cuboid {
@@ -323,7 +312,9 @@ export class Cuboid {
     }
 
     public toString(): string {
-        return this.minimumPoint.toString() + ":" + this.maximumPoint.toString() 
+        return (
+            this.minimumPoint.toString() + ":" + this.maximumPoint.toString()
+        );
     }
 
     getCenter(): Tensor {

@@ -1,12 +1,12 @@
-const { Vector, Direction, Cuboid } = require('../dist/index')
+const { Vector, Direction, Cuboid } = require("../dist/index");
 
-const c = new Cuboid(0, 0, 0, 2, 2, 2)
+const c = new Cuboid(-4, -4, -4, 4, 4, 4);
 
-console.log(`Cuboid bounds: ${c.toString()}`)
+console.log(`Cuboid bounds: ${c.toString()}`);
 
 // Should print false
-console.log(`Point is in cuboid: ${c.contains(5, 5, 5)}`)
+console.log(`Point (5, 5, 5) is within cuboid: ${c.contains(5, 5, 5)}`);
 
-for (let v of c.all()) {
-    console.log(`Point in cuboid: ${v.toString()}`)
-}
+console.log(`Cuboid size: ${c.getSize().toString()}`);
+
+console.log(`Center: ${c.getCenter().toString()}`);
