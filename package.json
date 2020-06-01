@@ -20,7 +20,7 @@
     ],
     "keywords": [],
     "author": "throw-out-error",
-    "license": "GPL-3.0-or-later",
+    "license": "MIT",
     "directories": {
         "examples": "examples"
     },

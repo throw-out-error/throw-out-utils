@@ -26,15 +26,16 @@ If you want to create an empty tensor filled with zeros, use `Tensor.zeros(SIZE)
 You can also import `Vector` from this package, which is equivalent to `[3]`:
 
 ```ts
-import { Tensor, Vector } from '@throw-out-error/throw-out-utils"
-const t = Tensor.from<Vector>(1, 2, 3)
+import { Tensor, Vector } from "@throw-out-error/throw-out-utils";
+const t = Tensor.from<Vector>(1, 2, 3);
 ```
 
 Tensors still have .x, .y, & .z as Vectors did so you should be able to do
+
 ```ts
-import { Tensor, Vector } from '@throw-out-error/throw-out-utils"
-const t = Tensor.from<Vector>(1, 2, 3)
-console.log(t.x) // Should print 1
+import { Tensor, Vector } from "@throw-out-error/throw-out-utils";
+const t = Tensor.from<Vector>(1, 2, 3);
+console.log(t.x); // Should print 1
 ```
 
 ## Cuboids
