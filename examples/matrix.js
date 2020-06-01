@@ -8,3 +8,6 @@ console.log(b.toString());
 
 let c = a.dot(b);
 console.log(c);
+
+const d = Tensor.random([2,2,2], 10)
+console.log(d.toArrayString())

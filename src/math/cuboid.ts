@@ -194,7 +194,7 @@ export class Cuboid {
     /**
      * Offsets the current bounding box by the specified amount.
      */
-    public offsetVector(n = 1, vec: Tensor): Cuboid {
+    public offsetTensor(n = 1, vec: Tensor): Cuboid {
         return this.offset(n, vec.x, vec.y, vec.z);
     }
 
@@ -230,14 +230,14 @@ export class Cuboid {
         );
     }
 
-    public intersectsVector(min: Tensor, max: Tensor): boolean {
+    public intersectsTensor(min: Tensor, max: Tensor): boolean {
         return this.intersects(min.x, max.x, min.y, max.y, min.z, max.z);
     }
 
     /**
      * Returns if the supplied vector is compconstely inside the bounding box
      */
-    public containsVector(v: Tensor): boolean {
+    public containsTensor(v: Tensor): boolean {
         return this.contains(v.x, v.y, v.z);
     }
 

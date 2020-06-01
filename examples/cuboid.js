@@ -1,4 +1,4 @@
-const { Vector, Direction, Cuboid } = require("../dist/index");
+const { Tensor, Direction, Cuboid } = require("../dist/index");
 
 const c = new Cuboid(-4, -4, -4, 4, 4, 4);
 

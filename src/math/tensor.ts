@@ -1,4 +1,5 @@
 import { Direction } from "../direction";
+import { chunk, treeify } from "../misc";
 
 export type Scalar = [];
 export type Vector = [3];
@@ -47,8 +48,14 @@ export class Tensor<
         return Tensor.zeros([3, 3]);
     }
 
+    static random<S extends number[]>(size: S, multiplier = 1): Tensor<S> {
+        const result = Tensor.zeros(size);
+        result.map(() => Math.floor(Math.random() * multiplier));
+        return result;
+    }
+
     /**
-     * Initializes an empty tensor with the specified size. All values in the data array will be 0.
+     * @description Initializes an empty tensor with the specified size. All values in the data array will be 0.
      */
     static zeros<S extends number[]>(size: S): Tensor<S> {
         return new Tensor<S>(
@@ -120,27 +127,56 @@ export class Tensor<
         return new Tensor(s.split(",").map((sv) => parseFloat(sv)));
     }
 
+    public toArrayString(): string {
+        return treeify(this.toArray());
+    }
+
     public toString(): string {
         return this.data.toString();
     }
 
     /**
-     * Offsets this tensor by the specified amount.
+     * @description Swaps the dimensions of this tensor
+     */
+    public transpose(): Tensor<S, T> {
+        this.size.reverse();
+        return this;
+    }
+
+    /**
+     * @description converts
+     */
+    public toArray(): NDArray {
+        const size = this.size;
+        const go = (a: NDArray) => {
+            const s = size.pop();
+            const result = chunk(a as number[], s as number);
+            size.push(s as number);
+            return result.length > 1 ? result.map(go) : a;
+        };
+        return go(this.data);
+    }
+
+    /**
+     * @description Offsets this tensor by the specified amount.
      * If n is not specified then it will default to one unit.
-     * Keep in mind that this method does not clone the current Tensor. 
+     * Keep in mind that this method does not clone the current Tensor.
      * Also, the size must match the value array's length.
      * @param n The amount of units to offset to
      * @param val The offset values (ex. offset(1, 0, 2, 0) will offset 2 units up)
      */
     public offset(n = 1, val: number[]): Tensor<S, T> {
         // TODO: size check on val and this.size
-        if(this.size[0] != val.length) throw new Error("This tensor's size must be the same as the offset value array!")
+        if (this.size[0] != val.length)
+            throw new Error(
+                "This tensor's size must be the same as the offset value array!"
+            );
         this.map((v, i) => v + val[i] * n);
         return this;
     }
 
     /**
-     * Offsets this Tensor in the specified direction (n times).
+     * @description Offsets this Tensor in the specified direction (n times).
      * If n is not specified then it will default to one unit in the direction specified.
      * Keep in mind that this method does not clone the current Tensor.
      * @param direction the direction to offset in
@@ -182,9 +218,10 @@ export class Tensor<
         return this.size;
     }
     /**
-        Copies the current Tensor and returns the new copy.
-        This is used if you don't want to modify the original Tensor when using operations.
-    */
+     * @description
+     * Copies the current Tensor and returns the new copy.
+     * This is used if you don't want to modify the original Tensor when using operations.
+     */
     public clone(): Tensor<S, T> {
         const d: number[] = [];
         this.data.forEach((n) => d.push(n));
@@ -220,6 +257,9 @@ export class Tensor<
         return this;
     }
 
+    /**
+     * @returns the dot product of the tensors
+     */
     dot(m: Tensor): number {
         if (this.size[1] !== m.size[0])
             throw new Error(
@@ -233,7 +273,7 @@ export class Tensor<
     /**
      * Apply function to all elements in this Tensor.
      *
-     * @param {Function} transformFn With signature (number, row, col) => number
+     * @param {Function} callback With signature (number, row, col) => number
      */
     map(
         callback: (val: number, index: number, arr: ArrayLike<number>) => number
@@ -245,7 +285,7 @@ export class Tensor<
     /**
      * Iterate over all the elements in this tensor.
      *
-     * @param {Function} transformFn With signature (value, index, array) => void
+     * @param {Function} callback With signature (value, index, array) => void
      */
     forEach(
         callback: (val: number, index: number, arr: ArrayLike<number>) => void
@@ -259,22 +299,11 @@ export class Tensor<
         return this;
     }
 
-    mult = this.scale;
-
     divide(n: number): Tensor<S, T> {
-        return this.mult(1 / n);
+        return this.scale(1 / n);
     }
 
-    div = this.divide;
-
-    // unit(): ThisType<Tensor> {
-    //     return this.divide(this.length());
-    // }
-
-    // // WTF
-    // length(): number {
-    //     return Math.sqrt(this.dot(this));
-    // }
+    // TODO: matrix multiplcation (.mult()) and division (.div())
 
     negate(): ThisType<Tensor> {
         return this.map((v) => (v = -v));
@@ -286,11 +315,5 @@ export class Tensor<
 
     equals(m: Tensor): boolean {
         return this.data.toString() === m.data.toString();
-    }
-
-    static random<S extends number[]>(size: S, multiplier = 1): Tensor<S> {
-        const result = Tensor.zeros(size);
-        result.map(() => Math.floor(Math.random() * multiplier));
-        return result;
     }
 }

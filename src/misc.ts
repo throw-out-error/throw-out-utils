@@ -1,3 +1,5 @@
+import { asTree } from "treeify";
+
 /**
  * @description Capitalize the first letter of each word
  */
@@ -18,10 +20,11 @@ export const cap = ([first, ...rest], lowerRest = false): string =>
 /**
  * @description Chunks an array into smaller arrays of a specified size.
  */
-export const chunk = (arr, size): any[] =>
-    Array.from({ length: Math.ceil(arr.length / size) }, (_v, i) =>
-        arr.slice(i * size, i * size + size)
-    );
+export const chunk = (xs: any[], n: number): any[] =>
+    xs.reduce((o, x, i) => {
+        o[Math.floor(i / n)].push(x);
+        return o;
+    }, Array(Math.ceil(xs.length / n)).fill([]));
 
 export const dayOfYear = (date: Date): number =>
     Math.floor(
@@ -31,3 +34,11 @@ export const dayOfYear = (date: Date): number =>
             60 /
             24
     );
+
+export const treeify = (
+    data: any,
+    showValues = true,
+    hideFunctions = true
+): string => {
+    return asTree(JSON.parse(JSON.stringify(data)), showValues, hideFunctions);
+};
