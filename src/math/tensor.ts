@@ -1,12 +1,23 @@
 import { Direction } from "../direction";
 
 export type Scalar = [];
-export type Vector = [3];
+export type Vector<T extends number = 3> = [T];
 
-export function isVector<T extends TypedArray>(
-    v: Tensor<number[], T>
+export function isVector<T extends TypedArray, S extends [number] = [3]>(
+    v: Tensor<number[], T>,
+    size: S = [3] as never
 ): v is Tensor<Vector, T> {
-    return v.size.length === 1 && v.size[0] === 3;
+    return isOfSize<S, T>(v, size);
+}
+
+export function isOfSize<S extends number[], T extends TypedArray>(
+    tensor: Tensor<number[], T>,
+    size: S
+): tensor is Tensor<S, T> {
+    return (
+        size.length === tensor.size.length &&
+        size.every((d, i) => tensor.size[i] === d)
+    );
 }
 
 export type Float32Array = globalThis.Float32Array;
@@ -146,8 +157,10 @@ export class Tensor<
      * @param direction the direction to offset in
      */
     public offsetDir(n = 1, direction: Direction): Tensor<Vector, T> {
-        if (!isVector(this)) {
-            throw TypeError("This tensor must be a Vector to be offsetted.");
+        if (!isOfSize<Vector<3>, T>(this, [3])) {
+            throw TypeError(
+                "This tensor must be a Vector of size [3] to be offsetted."
+            );
         }
 
         let dirVec = Tensor.VECTOR_ZERO.clone();
@@ -212,7 +225,7 @@ export class Tensor<
             return this;
         }
 
-        if (this.size.some((v, i) => n.size[i] !== v)) {
+        if (!isOfSize(n, this.size)) {
             throw TypeError("Tensor have to have the same size");
         }
 
