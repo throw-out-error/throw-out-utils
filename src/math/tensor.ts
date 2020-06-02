@@ -237,7 +237,7 @@ export class Tensor<
      */
     public clone(): Tensor<S, T> {
         const d: number[] = [];
-        this.data.forEach((n) => d.push(n));
+        this.data.forEach((n: number) => d.push(n));
         const m: Tensor<S, T> = new Tensor(d, this.size);
         return m;
     }
@@ -279,7 +279,7 @@ export class Tensor<
                 "Can't perform dot operation on matrices whose number of rows is not equivalent of the first Tensor's number of columns"
             );
         let result = 0;
-        this.forEach((v, i) => (result += this.data[i] * m.data[i]));
+        this.forEach((v: number, i: number) => (result += this.data[i] * m.data[i]));
         return result;
     }
 
