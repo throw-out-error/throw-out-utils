@@ -125,6 +125,12 @@ export class Tensor<
         this.data[2] = value;
     }
 
+    public sum(): number {
+        let s = 0;
+        this.forEach((v) => (s += v));
+        return s;
+    }
+
     public set(...n: Array<number>): Tensor<S, T> {
         this.data.set(n);
         return this;
@@ -279,7 +285,9 @@ export class Tensor<
                 "Can't perform dot operation on matrices whose number of rows is not equivalent of the first Tensor's number of columns"
             );
         let result = 0;
-        this.forEach((v: number, i: number) => (result += this.data[i] * m.data[i]));
+        this.forEach(
+            (v: number, i: number) => (result += this.data[i] * m.data[i])
+        );
         return result;
     }
 
@@ -290,7 +298,7 @@ export class Tensor<
      */
     map(
         callback: (val: number, index: number, arr: ArrayLike<number>) => number
-    ): ThisType<Tensor> {
+    ): Tensor<S, T> {
         this.data = this.data.map(callback) as T;
         return this;
     }
@@ -302,7 +310,7 @@ export class Tensor<
      */
     forEach(
         callback: (val: number, index: number, arr: ArrayLike<number>) => void
-    ): ThisType<Tensor> {
+    ): Tensor<S, T> {
         this.data.forEach(callback);
         return this;
     }
@@ -324,6 +332,50 @@ export class Tensor<
 
     lerp(a: Tensor, b: Tensor, fraction: number): Tensor {
         return b.clone().sub(a).scale(fraction).add(a);
+    }
+
+    /**
+     * Get the length of the vector.
+     * @returns {number} the length.
+     */
+    mag(): number {
+        return Math.sqrt(this.magSq());
+    }
+    /**
+     * Get the length of the vector squared
+     * @returns {number} the length squared
+     */
+    magSq(): number {
+        return this.clone()
+            .map((v) => v ** 2)
+            .sum();
+    }
+
+    [Symbol.toPrimitive](hint): number | string {
+        if (!isOfSize(this, []))
+            throw new Error(
+                "This tensor must be a scalar to be converted to a primitive."
+            );
+        if (hint === "string") return this.toString();
+        return this.data[0];
+    }
+
+    /**
+     * Get the normalized version of a vector
+     * @param {Vector2d} v the vector to be normalized
+     * @returns {Vector2d} the normalized vector.
+     */
+    normalize(): Tensor<S, T> {
+        return this.scale(1 / this.mag());
+    }
+
+    /**
+     * Set the length of this vector
+     * @param {number} n new length.
+     * @returns {Vector2d}
+     */
+    setMag(n: number) {
+        return this.normalize().scale(n);
     }
 
     equals(m: Tensor): boolean {

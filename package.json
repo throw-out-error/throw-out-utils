@@ -11,10 +11,6 @@
         "preversion": "npm run lint",
         "lint": "eslint src/**/*.ts --quiet --fix"
     },
-    "types": "dist/index.d.ts",
-    "typescript": {
-        "definition": "dist/index.d.ts"
-    },
     "files": [
         "dist/**/*"
     ],
