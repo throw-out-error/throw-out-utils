@@ -1,6 +1,6 @@
 {
     "name": "@throw-out-error/throw-out-utils",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "main": "dist/index.js",
     "scripts": {
         "prepublishOnly": "npm test && npm run lint",
