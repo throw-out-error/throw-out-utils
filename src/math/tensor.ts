@@ -351,7 +351,7 @@ export class Tensor<
             .sum();
     }
 
-    [Symbol.toPrimitive](hint): number | string {
+    [Symbol.toPrimitive](hint: string): number | string {
         if (!isOfSize(this, []))
             throw new Error(
                 "This tensor must be a scalar to be converted to a primitive."
