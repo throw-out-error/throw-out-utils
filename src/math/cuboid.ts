@@ -1,4 +1,5 @@
 import { Tensor, Vector } from "./tensor";
+import { Direction } from "../direction";
 
 export class Cuboid {
     public static EMPTY: Cuboid = new Cuboid(0, 0, 0, 0, 0, 0);
@@ -196,6 +197,40 @@ export class Cuboid {
      */
     public offsetTensor(n = 1, vec: Tensor): Cuboid {
         return this.offset(n, vec.x, vec.y, vec.z);
+    }
+
+        /**
+     * Offsets the current bounding box by the specified amount in a specified direction.
+     */
+    public offsetDir(n = 1, dir: Direction): Cuboid {
+        let dirVec = Tensor.VECTOR_ZERO.clone();
+        switch (dir) {
+            case Direction.UP:
+                dirVec = Tensor.from<Vector>(0, 1, 0);
+                break;
+            case Direction.DOWN:
+                dirVec = Tensor.from<Vector>(0, -1, 0);
+                break;
+            case Direction.NORTH:
+                dirVec = Tensor.from<Vector>(0, 0, -1);
+                break;
+            case Direction.SOUTH:
+                dirVec = Tensor.from<Vector>(0, 0, 1);
+                break;
+            case Direction.WEST:
+                dirVec = Tensor.from<Vector>(-1, 0, 0);
+                break;
+            case Direction.EAST:
+                dirVec = Tensor.from<Vector>(1, 0, 0);
+                break;
+        }
+
+        dirVec.scale(n);
+
+        // TODO: implement Cuboid#add method and sub method
+        this.minimumPoint.add(dirVec);
+        this.maximumPoint.add(dirVec);
+        return this;
     }
 
     /**
