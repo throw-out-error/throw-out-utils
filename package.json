@@ -3,13 +3,13 @@
     "version": "1.1.0",
     "main": "dist/index.js",
     "scripts": {
-        "prepublishOnly": "npm test && npm run lint",
-        "prepare": "npm run build",
+        "prepublishOnly": "yarn test && yarn lint",
+        "prepare": "yarn build",
         "version": "git add -A src",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
-        "build": "tsc --build && npm run bundle",
+        "build": "tsc --build && yarn bundle",
         "bundle": "browserify --standalone throw-out-utils src/index.ts -p [ tsify ] > dist/bundle.js",
-        "preversion": "npm run lint",
+        "preversion": "yarn lint",
         "lint": "eslint src/**/*.ts --quiet --fix"
     },
     "files": [
