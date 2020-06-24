@@ -215,9 +215,9 @@
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
 "@types/assert@^1.4.7":
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/@types/assert/-/assert-1.4.7.tgz#8add0d031e16e7ad87282f1b55c30813b4632cbd"
-  integrity sha512-CcLrcLy+7tWiGCXsWht6boJeTfq7I9uO0trcw2ohLfIXsG6N+OMfsfjIxIE51tfijUbnPQvqBUCwYDGinE+V2g==
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@types/assert/-/assert-1.5.1.tgz#9c4b57935d446ffcfb31d583799c47272161e270"
+  integrity sha512-W34OXyUAXEg0IvkMBr6WHTsvxh4veqNVJJGni/6pp13BabT/nuiEtUVkf+EYo8FIT4CQSVYfZ05XtUo5nRSWfQ==
 
 "@types/chai@^4.2.11":
   version "4.2.11"
