@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: pnpm test
+      - name: pnpm
         uses: creepinson/pnpm-action@master
         with:
           arguments: '["install", "test"]'
