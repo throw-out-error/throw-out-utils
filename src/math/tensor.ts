@@ -3,6 +3,8 @@ import { chunk, treeify } from "../misc";
 
 export type Scalar = [];
 export type Vector<T extends number = 3> = [T];
+export type Matrix3<T extends number = 3> = [T, T];
+export type Matrix4<T extends number = 4> = [T, T];
 
 export function isVector<T extends TypedArray, S extends [number] = [3]>(
     v: Tensor<number[], T>,
@@ -55,11 +57,11 @@ export class Tensor<
         return Tensor.zeros([3]);
     }
 
-    public static get MATRIX_3_ZERO(): Tensor<[3, 3]> {
+    public static get MATRIX_3_ZERO(): Tensor<Matrix3> {
         return Tensor.zeros([3, 3]);
     }
 
-    public static get MATRIX_4_ZERO(): Tensor<[4, 4]> {
+    public static get MATRIX_4_ZERO(): Tensor<Matrix4> {
         return Tensor.zeros([4, 4]);
     }
 
