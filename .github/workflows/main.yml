@@ -14,5 +14,7 @@ jobs:
                   node-version: "14.x"
             - name: npm install
               uses: jaid/action-npm-install@v1.2.1
+              with:
+                  packageManager: "pnpm"
             - name: Run tests
               run: pnpm test
