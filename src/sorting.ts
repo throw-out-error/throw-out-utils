@@ -1,4 +1,4 @@
-function merge(left, right): any[] {
+function merge(left: any, right: any): any[] {
     const result: any[] = [];
 
     while (left.length && right.length) {

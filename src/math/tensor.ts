@@ -55,8 +55,12 @@ export class Tensor<
         return Tensor.zeros([3]);
     }
 
-    public static get MATRIX_ZERO(): Tensor<[3, 3]> {
+    public static get MATRIX_3_ZERO(): Tensor<[3, 3]> {
         return Tensor.zeros([3, 3]);
+    }
+
+    public static get MATRIX_4_ZERO(): Tensor<[4, 4]> {
+        return Tensor.zeros([4, 4]);
     }
 
     static random<S extends number[]>(size: S, multiplier = 1): Tensor<S> {
@@ -351,19 +355,32 @@ export class Tensor<
             .sum();
     }
 
+
+    /**
+     * Returns the distance from another tensor
+     * @function
+     * @param {Vector} vector - Other tensor
+     * @returns {Number} Distance between the two tensors
+     * @instance
+     * @name distance
+     */
+    distance(vector: Tensor): number {
+        return vector.clone().sub(this).mag();
+    }
+
     [Symbol.toPrimitive](hint: string): number | string {
         if (!isOfSize(this, []))
             throw new Error(
                 "This tensor must be a scalar to be converted to a primitive."
             );
         if (hint === "string") return this.toString();
-        return this.data[0];
+        return this.x;
     }
 
     /**
      * Get the normalized version of a vector
-     * @param {Vector2d} v the vector to be normalized
-     * @returns {Vector2d} the normalized vector.
+     * @param {Tensor} v the vector to be normalized
+     * @returns {Tensor} the normalized vector.
      */
     normalize(): Tensor<S, T> {
         return this.scale(1 / this.mag());
@@ -372,7 +389,7 @@ export class Tensor<
     /**
      * Set the length of this vector
      * @param {number} n new length.
-     * @returns {Vector2d}
+     * @returns {Tensor}
      */
     setMag(n: number) {
         return this.normalize().scale(n);
