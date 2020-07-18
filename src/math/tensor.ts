@@ -286,10 +286,6 @@ export class Tensor<
      * @returns the dot product of the tensors
      */
     dot(m: Tensor): number {
-        if (this.size[1] !== m.size[0])
-            throw new Error(
-                "Can't perform dot operation on matrices whose number of rows is not equivalent of the first Tensor's number of columns"
-            );
         let result = 0;
         this.forEach(
             (v: number, i: number) => (result += this.data[i] * m.data[i])
