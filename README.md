@@ -1,43 +1,16 @@
 # Throw Out Utils
 
-A collection of utilities by throw-out-error that includes a java representation, an improved astar pathfinding algorithm, and a bunch of other utilities.
+![GitHub repo size](https://img.shields.io/github/repo-size/throw-out-error/throw-out-utils?style=plastic)
+![GitHub language count](https://img.shields.io/github/languages/count/throw-out-error/throw-out-utils?style=plastic)
+![GitHub top language](https://img.shields.io/github/languages/top/throw-out-error/throw-out-utils?style=plastic)
+![GitHub last commit](https://img.shields.io/github/last-commit/throw-out-error/throw-out-utils?color=red&style=plastic)
 
-Some of the other utilities include the Cuboid (a bounding box) and some math functions. This package also includes a 3D vector class. See the documentation below for more information.
+A collection of utilities by throw-out-error that includes an improved astar pathfinding algorithm, and a bunch of other utilities.
 
-Throw Out Utils also comes with a bundle.js file that can be used in the browser. However, the browser module does not have documentation, but feel free to experiment with it. You can access it with `window.throwOutUtils` or just `throwOutUtils`.
+Some of the other utilities include the Cuboid (a bounding box) and some math functions. This package also includes a Tensor class. See the wiki  for more information.
 
-## Tensors (WIP)
+Throw Out Utils also comes with a bundle.js file that can be used in the browser. Although the browser module does not have documentation, feel free to experiment with it. You can access it with `window.throwOutUtils` or just `throwOutUtils`.
 
-You can create a tensor by importing `Tensor` from `@throw-out-error/throw-out-utils` and then calling `new Tensor(DATA, SIZE)`. The data is obviously the data, and the size is an number array. For example:
-
-```ts
-const t = new Tensor([1, 2, 3], [3]);
-```
-
-If you want to pass in vector data easily, you can do something like this:
-
-```ts
-// Using Tensor.from makes it easier to use with vector data
-const t = Tensor.from(1, 2, 3);
-```
-
-If you want to create an empty tensor filled with zeros, use `Tensor.zeros(SIZE)`.
-
-You can also import `Vector` from this package, which is equivalent to `[3]`:
-
-```ts
-import { Tensor, Vector } from "@throw-out-error/throw-out-utils";
-const t = Tensor.from<Vector>(1, 2, 3);
-```
-
-Tensors still have .x, .y, & .z as Vectors did so you should be able to do
-
-```ts
-import { Tensor, Vector } from "@throw-out-error/throw-out-utils";
-const t = Tensor.from<Vector>(1, 2, 3);
-console.log(t.x); // Should print 1
-```
-
-## Cuboids
-
-A cuboid is an axis-aligned bounding box with a minimum and a maximum (Vector) point. See `examples/cuboid.js` for an example.
+## Requirements
+### This package requires Nodejs version >= 12.
+If you are using an older version it may crash due to several reasons - one being that the Tensor class using the Array#flat function which does not work in older versions of Nodejs.
