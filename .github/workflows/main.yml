@@ -16,5 +16,7 @@ jobs:
               uses: jaid/action-npm-install@v1.2.1
               with:
                   packageManager: "pnpm"
-            - name: Run tests
-              run: pnpm test
+            - name: pnpm test
+              uses: znck/pnpm@v0.1.0-alpha.1
+              with:
+                  args: "test"
