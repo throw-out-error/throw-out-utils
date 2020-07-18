@@ -14,5 +14,5 @@ jobs:
                   node-version: "14.x"
             - name: pnpm test
               uses: creepinson/pnpm-action@v2.1.0-alpha
-              with:
-                  args: "test"
+              with: 
+                 arguments: '["install", "test"]'
