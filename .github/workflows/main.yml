@@ -12,11 +12,7 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: "14.x"
-            - name: npm install
-              uses: jaid/action-npm-install@v1.2.1
-              with:
-                  packageManager: "pnpm"
             - name: pnpm test
-              uses: znck/pnpm@v0.1.0-alpha.1
+              uses: creepinson/pnpm-action@v2.1.0-alpha
               with:
                   args: "test"
