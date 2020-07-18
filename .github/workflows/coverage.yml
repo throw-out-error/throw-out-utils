@@ -11,4 +11,4 @@ jobs:
       - name: pnpm
         uses: creepinson/pnpm-action@master
         with:
-          arguments: '["install", "coverage"]'
+          arguments: '["install", "run coverage"]'
