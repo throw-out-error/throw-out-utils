@@ -19,12 +19,12 @@ export const cap = ([first, ...rest], lowerRest = false): string =>
 
 /**
  * @description Chunks an array into smaller arrays of a specified size.
+ * @param a The array or string to split up into chunks.
  */
-export const chunk = (xs: any[], n: number): any[] =>
-    xs.reduce((o, x, i) => {
-        o[Math.floor(i / n)].push(x);
-        return o;
-    }, Array(Math.ceil(xs.length / n)).fill([]));
+export const chunk = (a: any[] | string, b: number): any[] =>
+    Array.from({ length: Math.ceil(a.length / b) }, (_, r) =>
+        a.slice(r * b, r * b + b)
+    );
 
 export const dayOfYear = (date: Date): number =>
     Math.floor(
