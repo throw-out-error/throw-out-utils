@@ -7,9 +7,9 @@ export interface Options<T> {
 
 export class PriorityQueue<T> implements Iterable<T> {
     private _length = 0;
-    private DEFAULT_COMPARATOR = function (a, b) {
+    private DEFAULT_COMPARATOR(a, b) {
         return a - b;
-    };
+    }
 
     /**
      * @returns the number of elements in this queue.

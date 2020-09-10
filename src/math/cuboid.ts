@@ -199,7 +199,7 @@ export class Cuboid {
         return this.offset(n, vec.x, vec.y, vec.z);
     }
 
-        /**
+    /**
      * Offsets the current bounding box by the specified amount in a specified direction.
      */
     public offsetDir(n = 1, dir: Direction): Cuboid {

@@ -353,7 +353,6 @@ export class Tensor<
             .sum();
     }
 
-
     /**
      * Returns the distance from another tensor
      * @function

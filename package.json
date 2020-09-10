@@ -1,10 +1,9 @@
 {
     "name": "@throw-out-error/throw-out-utils",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "main": "dist/index.js",
     "scripts": {
-        "prepublishOnly": "pnpm test && pnpm lint",
-        "prepare": "pnpm build",
+        "prepublishOnly": "pnpm run lint && pnpm run build && pnpm run test",
         "version": "git add -A src",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
         "build": "tsc --build && pnpm bundle",
