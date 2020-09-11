@@ -49,7 +49,7 @@ export const treeify = (
  * @param {?Object} self - Object that gets applied as this-object when the original function is called.
  * @returns {wrapper}
  */
-export function promisify(original, self = null) {
+export function promisify(original, self: unknown = null) {
     if (typeof original !== "function") {
         throw new TypeError("original must be a function");
     }
