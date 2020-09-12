@@ -6,7 +6,7 @@
         "prepublishOnly": "pnpm run lint && pnpm run build && pnpm run test",
         "version": "git add -A src",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
-        "build": "tsc --build && pnpm bundle",
+        "build": "tsc && pnpm bundle",
         "bundle": "browserify --standalone throw-out-utils src/index.ts -p [ tsify ] > dist/bundle.js",
         "lint": "eslint src/**/*.ts --quiet --fix",
         "coverage": "nyc mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
