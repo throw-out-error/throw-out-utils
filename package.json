@@ -1,13 +1,13 @@
 {
     "name": "@throw-out-error/throw-out-utils",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "main": "dist/index.js",
     "scripts": {
         "prepublishOnly": "yarn run lint && yarn run build && yarn run test",
         "version": "git add -A src",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
         "build": "tsc && yarn run bundle",
-        "bundle": "browserify --standalone toe src/index.ts -p [ tsify ] > dist/bundle.js",
+        "bundle": "browserify --standalone TOU src/index.ts -p [ tsify ] > dist/bundle.js",
         "lint": "eslint src/**/*.ts --quiet --fix",
         "coverage": "nyc mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
     },
