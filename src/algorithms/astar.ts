@@ -33,7 +33,7 @@ export class PathfindingResult {
 }
 
 /**
-  Credit goes to https://github.com/andrewrk/node-astar
+ * Credit goes to https://github.com/andrewrk/node-astar
  */
 export const aStar = (params: any): PathfindingResult => {
     assert.ok(params.start !== undefined);

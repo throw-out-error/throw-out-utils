@@ -1,13 +1,13 @@
 {
     "name": "@throw-out-error/throw-out-utils",
-    "version": "1.1.3",
+    "version": "1.1.4",
     "main": "dist/index.js",
     "scripts": {
-        "prepublishOnly": "pnpm run lint && pnpm run build && pnpm run test",
+        "prepublishOnly": "yarn run lint && yarn run build && yarn run test",
         "version": "git add -A src",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
-        "build": "tsc && pnpm bundle",
-        "bundle": "browserify --standalone throw-out-utils src/index.ts -p [ tsify ] > dist/bundle.js",
+        "build": "tsc && yarn run bundle",
+        "bundle": "browserify --standalone toe src/index.ts -p [ tsify ] > dist/bundle.js",
         "lint": "eslint src/**/*.ts --quiet --fix",
         "coverage": "nyc mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
     },
@@ -26,27 +26,25 @@
     },
     "description": "",
     "dependencies": {
-        "@types/assert": "^1.5.2",
-        "@types/node": "^14.10.1",
-        "@types/treeify": "^1.0.0",
-        "assert": "^2.0.0",
         "treeify": "^1.1.0"
     },
     "devDependencies": {
+        "@types/node": "^14.11.2",
+        "@types/treeify": "^1.0.0",
         "@types/chai": "^4.2.12",
         "@types/mocha": "^8.0.3",
-        "@typescript-eslint/eslint-plugin": "^4.1.0",
-        "@typescript-eslint/parser": "^4.1.0",
+        "@typescript-eslint/eslint-plugin": "^4.2.0",
+        "@typescript-eslint/parser": "^4.2.0",
         "browserify": "^16.5.2",
         "chai": "^4.2.0",
-        "eslint": "^7.8.1",
+        "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-prettier": "^3.1.4",
         "mocha": "^8.1.3",
         "nyc": "^15.1.0",
-        "prettier": "^2.1.1",
+        "prettier": "^2.1.2",
         "ts-node": "^9.0.0",
         "tsify": "^5.0.2",
-        "typescript": "^4.0.2"
+        "typescript": "^4.0.3"
     }
 }
