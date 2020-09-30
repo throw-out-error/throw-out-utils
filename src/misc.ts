@@ -23,7 +23,7 @@ export const cap = ([first, ...rest], lowerRest = false): string =>
  */
 export const chunk = (a: any[] | string, b: number): any[] =>
     Array.from({ length: Math.ceil(a.length / b) }, (_, r) =>
-        a.slice(r * b, r * b + b)
+        a.slice(r * b, r * b + b),
     );
 
 export const dayOfYear = (date: Date): number =>
@@ -32,13 +32,13 @@ export const dayOfYear = (date: Date): number =>
             1000 /
             60 /
             60 /
-            24
+            24,
     );
 
 export const treeify = (
     data: unknown,
     showValues = true,
-    hideFunctions = true
+    hideFunctions = true,
 ): string => {
     return asTree(JSON.parse(JSON.stringify(data)), showValues, hideFunctions);
 };
@@ -92,11 +92,14 @@ export function promisify(original, self: unknown = null) {
     return wrapper;
 }
 
-export class CodeError extends Error {
-    code: string;
+export class ImprovedError extends Error {
+    type: string;
 
-    constructor(message: string, code: string) {
+    constructor(message: string, type: string) {
         super(message);
-        this.code = code;
+        this.type = type;
     }
 }
+
+export const hasError = (obj: unknown): obj is { error: unknown } =>
+    (obj as { error: unknown }).error !== undefined;
