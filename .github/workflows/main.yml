@@ -5,11 +5,9 @@ on: [push]
 jobs:
     test:
         runs-on: ubuntu-latest
-
         steps:
             - uses: actions/checkout@v2
             - name: pnpm
-              uses: ianwalter/pnpm-container@v1.1.0
-              run: |
-                  pnpm i 
-                  pnpm run test
+              uses: creepinson/pnpm-action@master
+              with:
+                  arguments: '["test"]'

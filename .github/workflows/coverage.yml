@@ -9,7 +9,6 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: pnpm
-              uses: ianwalter/pnpm-container@v1.1.0
-              run: |
-                  pnpm i 
-                  pnpm run coverage
+              uses: creepinson/pnpm-action@master
+              with:
+                  arguments: '["coverage"]'
