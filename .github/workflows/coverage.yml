@@ -3,12 +3,15 @@ name: Coverage
 on: [push]
 
 jobs:
-    coverage:
+    test:
         runs-on: ubuntu-latest
-
         steps:
             - uses: actions/checkout@v2
-            - name: pnpm
-              uses: creepinson/pnpm-action@master
+            - uses: pnpm/action-setup@v1.2.1
               with:
-                  arguments: '["coverage"]'
+                  version: 5.10.2
+            - run: |
+                  pnpm install
+                  pnpm run coverage
+                  
+
