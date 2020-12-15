@@ -5,6 +5,12 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/throw-out-error/throw-out-utils?style=plastic)
 ![GitHub last commit](https://img.shields.io/github/last-commit/throw-out-error/throw-out-utils?color=red&style=plastic)
 
+## Warning
+
+This package is deprecated and will no longer be updated. Please see [@toes/core](https://github.com/throw-out-error/core) for more information.
+
+## Description
+
 A collection of utilities by throw-out-error that includes an improved astar pathfinding algorithm, and a bunch of other utilities.
 
 Some of the other utilities include the Cuboid (a bounding box) and some math functions. This package also includes a Tensor class. See the wiki  for more information.
